@@ -30,6 +30,7 @@ build() {
     --with-dri-driverdir=/usr/lib/xorg/modules/dri \
     --with-dri-drivers=swrast,radeon,r200,r300,i810,i915,i965,unichrome,mach64,mga,r128,savage,sis,tdfx,trident \
     --enable-gallium-nouveau \
+    --disable-gallium-intel \
     --with-state-trackers=dri,egl \
     --enable-glx-tls \
     --with-driver=dri \
@@ -117,8 +118,8 @@ package_intel-dri() {
   make -C i965 DESTDIR="${pkgdir}" install || return 1
 
 #  cd "${srcdir}/Mesa-${pkgver}/src/gallium/winsys/drm/intel/egl"
-  cd "${srcdir}/Mesa-${pkgver}/src/gallium/winsys/drm/intel"
-  make DESTDIR="${pkgdir}" install || return 1
+#  cd "${srcdir}/Mesa-${pkgver}/src/gallium/winsys/drm/intel"
+#  make DESTDIR="${pkgdir}" install || return 1
 }
 
 package_unichrome-dri() {
