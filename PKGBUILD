@@ -3,25 +3,26 @@
 
 pkgbase=mesa
 pkgname=('mesa' 'libgl' 'ati-dri' 'intel-dri' 'unichrome-dri' 'mach64-dri' 'mga-dri' 'r128-dri' 'savage-dri' 'sis-dri' 'tdfx-dri' 'nouveau-dri')
-pkgver=7.9.99.git20101230
+pkgver=7.10
+#pkgver=7.9.99.git20101230
 pkgrel=1
 arch=('i686' 'x86_64')
 makedepends=('glproto>=1.4.12' 'pkgconfig' 'libdrm>=2.4.23' 'libxxf86vm>=1.1.0' 'libxdamage>=1.1.3' 'expat>=2.0.1' 'libx11>=1.3.5' 'libxt>=1.0.8' 
              'gcc-libs>=4.5' 'dri2proto=2.3' 'python2' 'talloc' 'libxml2' 'imake')
 url="http://mesa3d.sourceforge.net"
 license=('custom')
-source=( # ftp://ftp.freedesktop.org/pub/mesa/${pkgver}/MesaLib-${pkgver}.tar.bz2
+source=(ftp://ftp.freedesktop.org/pub/mesa/${pkgver}/MesaLib-${pkgver}.tar.bz2
 	# mesa git shot from 7.10 branch - see for state: http://cgit.freedesktop.org/mesa/mesa/commit/?h=7.10&id=aa196d047c2d42835f3f6f25ac304b312f33f4f9
-	ftp://ftp.archlinux.org/other/mesa/mesa-aa196d047c2d42835f3f6f25ac304b312f33f4f9.tar.bz2
+	#ftp://ftp.archlinux.org/other/mesa/mesa-aa196d047c2d42835f3f6f25ac304b312f33f4f9.tar.bz2
         ftp://ftp.archlinux.org/other/mesa/gl-manpages-1.0.1.tar.bz2
         LICENSE)
-md5sums=('e3f013c1e8593e4c6130305b7a482d51'
+md5sums=('33fb94eccc02cbb4d8d1365615e38e46'
          '6ae05158e678f4594343f32c2ca50515'
          '5c65a0fe315dd347e09b1f2826a1df5a')
 
 build() {
-#  cd "${srcdir}/Mesa-${pkgver}"
-  cd ${srcdir}/mesa-*
+  cd "${srcdir}/Mesa-${pkgver}"
+#  cd ${srcdir}/mesa-*
 
   # required for git build
 #  autoreconf -vfi
@@ -32,8 +33,8 @@ build() {
   sed -i -e "s|PYTHON2 = python|PYTHON2 = python2|" configs/{default,autoconf.in}
   sed -i -e "s|python|python2|" src/gallium/auxiliary/Makefile
 
-#  ./configure --prefix=/usr \
-  ./autogen.sh --prefix=/usr \
+#  ./autogen.sh --prefix=/usr \
+  ./configure --prefix=/usr \
     --with-dri-driverdir=/usr/lib/xorg/modules/dri \
     --disable-egl \
     --enable-gallium-radeon \
@@ -54,8 +55,8 @@ package_libgl() {
   depends=('libdrm>=2.4.22' 'libxxf86vm>=1.1.0' 'libxdamage>=1.1.3' 'expat>=2.0.1')
   pkgdesc="Mesa 3-D graphics library and DRI software rasterizer"
 
-#  cd "${srcdir}/Mesa-${pkgver}"
-  cd ${srcdir}/mesa-*
+  cd "${srcdir}/Mesa-${pkgver}"
+#  cd ${srcdir}/mesa-*
   install -m755 -d "${pkgdir}/usr/lib"
   install -m755 -d "${pkgdir}/usr/lib/xorg/modules/extensions"
 
@@ -73,8 +74,8 @@ package_mesa() {
   depends=('libgl' 'libx11>=1.3.5' 'libxt>=1.0.8' 'gcc-libs>=4.5' 'dri2proto=2.3' 'libdrm>=2.4.22' 'glproto>=1.4.12')
   pkgdesc="Mesa 3-D graphics libraries and include files"
 
-#  cd "${srcdir}/Mesa-${pkgver}"
-  cd ${srcdir}/mesa-*
+  cd "${srcdir}/Mesa-${pkgver}"
+#  cd ${srcdir}/mesa-*
   make DESTDIR="${pkgdir}" install
 
   rm -f "${pkgdir}/usr/lib/libGL.so"*
@@ -96,15 +97,15 @@ package_ati-dri() {
   pkgdesc="Mesa DRI + Gallium3D r300 drivers for AMD/ATI Radeon"
   conflicts=('xf86-video-ati<6.9.0-6')
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C radeon DESTDIR="${pkgdir}" install
   make -C r200 DESTDIR="${pkgdir}" install
   # classic mesa driver for R300 r300_dri.so
   #make -C r300 DESTDIR="${pkgdir}" install  <------- depricated
   # gallium3D driver for R300 r300_dri.so
-#  make -C ${srcdir}/Mesa-${pkgver}/src/gallium/targets/dri-r300 DESTDIR="${pkgdir}" install
-  make -C ${srcdir}/mesa-*/src/gallium/targets/dri-r300 DESTDIR="${pkgdir}" install
+  make -C ${srcdir}/Mesa-${pkgver}/src/gallium/targets/dri-r300 DESTDIR="${pkgdir}" install
+#  make -C ${srcdir}/mesa-*/src/gallium/targets/dri-r300 DESTDIR="${pkgdir}" install
   make -C r600 DESTDIR="${pkgdir}" install
 }
 
@@ -112,8 +113,8 @@ package_intel-dri() {
   depends=("libgl=${pkgver}")
   pkgdesc="Mesa DRI drivers for Intel"
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C i810 DESTDIR="${pkgdir}" install
   make -C i915 DESTDIR="${pkgdir}" install
   make -C i965 DESTDIR="${pkgdir}" install
@@ -123,8 +124,8 @@ package_unichrome-dri() {
   depends=("libgl=${pkgver}")
   pkgdesc="Mesa DRI drivers for S3 Graphics/VIA Unichrome"
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C unichrome DESTDIR="${pkgdir}" install
 }
 
@@ -133,8 +134,8 @@ package_mach64-dri() {
   pkgdesc="Mesa DRI drivers for ATI Mach64"
   conflicts=('xf86-video-mach64<6.8.2')
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C mach64 DESTDIR="${pkgdir}" install
 }
 
@@ -143,8 +144,8 @@ package_mga-dri() {
   pkgdesc="Mesa DRI drivers for Matrox"
   conflicts=('xf86-video-mga<1.4.11')
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C mga DESTDIR="${pkgdir}" install
 }
 
@@ -153,8 +154,8 @@ package_r128-dri() {
   pkgdesc="Mesa DRI drivers for ATI Rage128"
   conflicts=('xf86-video-r128<6.8.1')
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C r128 DESTDIR="${pkgdir}" install
 }
 
@@ -163,8 +164,8 @@ package_savage-dri() {
   pkgdesc="Mesa DRI drivers for S3 Sraphics/VIA Savage"
   conflicts=('xf86-video-savage<2.3.1')
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C savage DESTDIR="${pkgdir}" install
 }
 
@@ -173,8 +174,8 @@ package_sis-dri() {
   pkgdesc="Mesa DRI drivers for SiS"
   conflicts=('xf86-video-sis<0.10.2')
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C sis DESTDIR="${pkgdir}" install
 }
 
@@ -183,8 +184,8 @@ package_tdfx-dri() {
   pkgdesc="Mesa DRI drivers for 3dfx"
   conflicts=('xf86-video-tdfx<1.4.3')
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   make -C tdfx DESTDIR="${pkgdir}" install
 }
 
@@ -192,12 +193,12 @@ package_nouveau-dri() {
   depends=("libgl=${pkgver}")
   pkgdesc="Mesa classic DRI + Gallium3D drivers for Nouveau"
 
-#  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
-  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
+  cd "${srcdir}/Mesa-${pkgver}/src/mesa/drivers/dri"
+#  cd ${srcdir}/mesa-*/src/mesa/drivers/dri
   # classic mesa driver for nv10 , nv20 nouveau_vieux_dri.so
   make -C nouveau DESTDIR="${pkgdir}" install
   # gallium3D driver for nv30 - nv40 - nv50 nouveau_dri.so
-#  make -C ${srcdir}/Mesa-${pkgver}/src/gallium/targets/dri-nouveau DESTDIR="${pkgdir}" install
-  make -C ${srcdir}/mesa-*/src/gallium/targets/dri-nouveau DESTDIR="${pkgdir}" install
+  make -C ${srcdir}/Mesa-${pkgver}/src/gallium/targets/dri-nouveau DESTDIR="${pkgdir}" install
+#  make -C ${srcdir}/mesa-*/src/gallium/targets/dri-nouveau DESTDIR="${pkgdir}" install
 }
 
