@@ -45,7 +45,6 @@ fi
 if [ "${_git}" = "true" ]; then
     ./autogen.sh --prefix=/usr \
     --with-dri-driverdir=/usr/lib/xorg/modules/dri \
-    --disable-egl \
     --enable-gallium-radeon \
     --enable-gallium-r600 \
     --enable-gallium-nouveau \
@@ -62,7 +61,6 @@ if [ "${_git}" = "true" ]; then
   else
     ./configure --prefix=/usr \
     --with-dri-driverdir=/usr/lib/xorg/modules/dri \
-    --disable-egl \
     --enable-gallium-radeon \
     --enable-gallium-r600 \
     --enable-gallium-nouveau \
