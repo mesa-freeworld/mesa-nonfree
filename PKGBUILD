@@ -104,7 +104,7 @@ fi
   ln -s libglx.xorg "${pkgdir}/usr/lib/xorg/modules/extensions/libglx.so"
 
   install -m755 -d "${pkgdir}/usr/share/licenses/libgl"
-  install -m755 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libgl/"
+  install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libgl/"
 }
 
 package_libgles() {
@@ -129,7 +129,7 @@ fi
   bin/minstall include/GLES2/* "${pkgdir}/usr/include/GLES2/"
 
   install -m755 -d "${pkgdir}/usr/share/licenses/libgles"
-  install -m755 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libgles/"
+  install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libgles/"
 }
 
 package_libegl() {
@@ -159,7 +159,7 @@ fi
   bin/minstall docs/egl.html "${pkgdir}/usr/share/doc/libegl/"
 
   install -m755 -d "${pkgdir}/usr/share/licenses/libegl"
-  install -m755 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libegl/"
+  install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libegl/"
 }
 package_mesa() {
   depends=('libgl' 'libx11>=1.3.5' 'libxt>=1.0.8' 'gcc-libs>=4.5' 'dri2proto=2.3' 'libdrm>=2.4.22' 'glproto>=1.4.12')
@@ -186,7 +186,7 @@ fi
   rm -rf ${pkgdir}/usr/include/{GLES,GLES2,EGL,KHR}
 
   install -m755 -d "${pkgdir}/usr/share/licenses/mesa"
-  install -m755 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/mesa/"
+  install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/mesa/"
 }
 
 package_ati-dri() {
