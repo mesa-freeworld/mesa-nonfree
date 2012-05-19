@@ -2,7 +2,7 @@
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=mesa
-pkgname=('mesa' 'libgl' 'osmesa' 'libglapi' 'libgles' 'libegl' 'khrplatform-devel' 'ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri')
+pkgname=('mesa' 'libgl' 'osmesa' 'libglapi' 'libgbm' 'libgles' 'libegl' 'khrplatform-devel' 'ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri')
 
 #_git=true
 _gitdate=20111031
@@ -12,7 +12,7 @@ if [ "${_git}" = "true" ]; then
     pkgver=7.10.99.git20110709
     #pkgver=7.11
   else
-    pkgver=8.0.2
+    pkgver=8.0.3
 fi
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -32,7 +32,7 @@ if [ "${_git}" = "true" ]; then
 )
 fi
 md5sums=('5c65a0fe315dd347e09b1f2826a1df5a'
-         'a368104e5700707048dc3e8691a9a7a1')
+         'cc5ee15e306b8c15da6a478923797171')
 
 build() {
     cd ${srcdir}/?esa-*
@@ -43,7 +43,9 @@ if [ "${_git}" = "true" ]; then
     --with-dri-driverdir=/usr/lib/xorg/modules/dri \
     --with-gallium-drivers=r300,r600,nouveau,svga,swrast \
     --enable-gallium-llvm \
-    --enable-gallium-egl --enable-shared-glapi\
+   --enable-gallium-egl \
+    --enable-shared-glapi \
+    --enable-gbm \
     --enable-glx-tls \
     --enable-dri \
     --enable-glx \
@@ -54,7 +56,7 @@ if [ "${_git}" = "true" ]; then
     --enable-texture-float \
     --enable-xa \
     --enable-shared-dricore
-    
+    #--enable-gbm \
     #    --enable-gallium-svga \
     
   else
@@ -63,7 +65,9 @@ if [ "${_git}" = "true" ]; then
     --with-dri-driverdir=/usr/lib/xorg/modules/dri \
     --with-gallium-drivers=r300,r600,nouveau,svga,swrast \
     --enable-gallium-llvm \
-    --enable-gallium-egl --enable-shared-glapi\
+    --enable-gallium-egl \
+    --enable-shared-glapi \
+    --enable-gbm \
     --enable-glx-tls \
     --enable-dri \
     --enable-glx \
@@ -119,6 +123,20 @@ package_libglapi() {
 
   install -m755 -d "${pkgdir}/usr/share/licenses/libglapi"
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libglapi/"
+}
+
+package_libgbm() {
+  depends=('glibc')
+  pkgdesc="Mesa gbm library"
+
+  cd ${srcdir}/?esa-*   
+  install -m755 -d "${pkgdir}/usr/lib"
+  bin/minstall lib/libgbm.so* "${pkgdir}/usr/lib/"
+  install -m755 -d "${pkgdir}/usr/lib/pkgconfig"
+  bin/minstall src/gbm/main/gbm.pc "${pkgdir}/usr/lib/pkgconfig/"
+
+  install -m755 -d "${pkgdir}/usr/share/licenses/libgbm"
+  install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libgbm/"
 }
 
 package_libgles() {
@@ -189,11 +207,12 @@ package_mesa() {
 
   rm -f "${pkgdir}/usr/lib/libGL.so"*
   rm -f "${pkgdir}/usr/lib/libglapi.so"*
+  rm -f "${pkgdir}/usr/lib/libgbm.so"*
   rm -f "${pkgdir}/usr/lib/libGLESv"*
   rm -f "${pkgdir}/usr/lib/libEGL"*
   rm -rf "${pkgdir}/usr/lib/egl"
   rm -f "${pkgdir}/usr/lib/libOSMesa"*
-  rm -f ${pkgdir}/usr/lib/pkgconfig/{glesv1_cm.pc,glesv2.pc,egl.pc,osmesa.pc}
+  rm -f ${pkgdir}/usr/lib/pkgconfig/{glesv1_cm.pc,glesv2.pc,egl.pc,osmesa.pc,gbm.pc}
   rm -rf "${pkgdir}/usr/lib/xorg"
   rm -f "${pkgdir}/usr/include/GL/glew.h"
   rm -f "${pkgdir}/usr/include/GL/glxew.h"
