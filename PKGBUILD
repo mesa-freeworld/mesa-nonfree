@@ -4,7 +4,7 @@
 pkgbase=mesa
 pkgname=('ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa' 'mesa-libgl')
 pkgver=9.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 makedepends=('python2' 'libxml2' 'libx11' 'glproto' 'libdrm' 'dri2proto' 'libxxf86vm' 'libxdamage'
              'libvdpau' 'wayland' 'llvm-amdgpu-snapshot')
@@ -123,8 +123,6 @@ package_mesa() {
   # rename libgl.so to not conflict with blobs - may break gl.pc ?
   mv ${pkgdir}/usr/lib/libGL.so.1.2.0 	${pkgdir}/usr/lib/mesa-libGL.so.1.2.0
   rm ${pkgdir}/usr/lib/libGL.so{,.1}
-#  ln -s mesa-libGL.so.1.2.0         ${pkgdir}/usr/lib/mesa-libGL.so
-#  ln -s mesa-libGL.so.1.2.0         ${pkgdir}/usr/lib/mesa-libGL.so.1
 
   install -m755 -d "${pkgdir}/usr/share/licenses/mesa"
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/mesa/"
@@ -133,16 +131,14 @@ package_mesa() {
 package_mesa-libgl() {
   pkgdesc="Mesa 3-D graphics library"
   depends=("mesa=${pkgver}")
-  provides=('libgl')
+  provides=("libgl=${pkgver}")
   replaces=('libgl')
  
   # See FS#26284
   install -m755 -d "${pkgdir}/usr/lib/xorg/modules/extensions"
   ln -s libglx.xorg "${pkgdir}/usr/lib/xorg/modules/extensions/libglx.so"
 
-#  ln -s mesa-libGL.so           ${pkgdir}/usr/lib/libGL.so
   ln -s mesa-libGL.so.1.2.0      ${pkgdir}/usr/lib/libGL.so
-#  ln -s mesa-libGL.so.1         ${pkgdir}/usr/lib/libGL.so.1
   ln -s mesa-libGL.so.1.2.0      ${pkgdir}/usr/lib/libGL.so.1
   ln -s mesa-libGL.so.1.2.0      ${pkgdir}/usr/lib/libGL.so.1.2.0
 
