@@ -135,7 +135,6 @@ package_mesa-libgl() {
   depends=("mesa=${pkgver}")
   provides=('libgl')
   replaces=('libgl')
-  conflicts=('nvidia-utils' 'catalyst-utils' 'libgl')
  
   # See FS#26284
   install -m755 -d "${pkgdir}/usr/lib/xorg/modules/extensions"
