@@ -31,8 +31,8 @@ build() {
     --enable-llvm-shared-libs \
     --enable-egl \
     --disable-gallium-egl \
+    --disable-gallium-gbm \
     --enable-gbm \
-    --enable-gallium-gbm \
     --enable-gallium-llvm \
     --enable-shared-glapi \
     --enable-glx-tls \
@@ -51,6 +51,7 @@ build() {
 
     # --help
     # --disable-gallium-egl : not well maintained/expose more bugs, so prefer egl_dri2 (FS#40096)
+    # --disable-gallium-gbm : FS#41337 only useful with gallium-egl
 
   make
 
