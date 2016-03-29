@@ -4,7 +4,7 @@
 pkgbase=mesa
 pkgname=('opencl-mesa' 'libva-mesa-driver' 'mesa-vdpau' 'mesa' 'mesa-libgl')
 pkgver=11.1.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 makedepends=('python2-mako' 'libxml2' 'libx11' 'glproto' 'libdrm' 'dri2proto' 'dri3proto' 'presentproto' 
              'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'wayland' 'elfutils' 'llvm'
@@ -28,12 +28,10 @@ prepare() {
 build() {
   cd ${srcdir}/?esa-*
 
-  #autoreconf -vfi # our automake is far too new for their build system :)
-
   ./configure --prefix=/usr \
     --sysconfdir=/etc \
     --with-dri-driverdir=/usr/lib/xorg/modules/dri \
-    --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast \
+    --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast,virgl \
     --with-dri-drivers=i915,i965,r200,radeon,nouveau,swrast \
     --with-egl-platforms=x11,drm,wayland \
     --with-sha1=libgcrypt \
@@ -56,8 +54,6 @@ build() {
     --enable-opencl --enable-opencl-icd \
     --with-clang-libdir=/usr/lib
 
-    # --help
-
   make
 
   # fake installation
@@ -71,11 +67,11 @@ package_opencl-mesa() {
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   
   install -m755 -d ${pkgdir}/etc
-  mv -v ${srcdir}/fakeinstall/etc/OpenCL ${pkgdir}/etc/
+  cp -rv ${srcdir}/fakeinstall/etc/OpenCL ${pkgdir}/etc/
   
   install -m755 -d ${pkgdir}/usr/lib/gallium-pipe
-  mv -v ${srcdir}/fakeinstall/usr/lib/lib*OpenCL* ${pkgdir}/usr/lib/
-  mv -v ${srcdir}/fakeinstall/usr/lib/gallium-pipe/pipe_{r600,radeonsi}.so ${pkgdir}/usr/lib/gallium-pipe/
+  cp -rv ${srcdir}/fakeinstall/usr/lib/lib*OpenCL* ${pkgdir}/usr/lib/
+  cp -rv ${srcdir}/fakeinstall/usr/lib/gallium-pipe/pipe_{r600,radeonsi}.so ${pkgdir}/usr/lib/gallium-pipe/
 
   install -m755 -d "${pkgdir}/usr/share/licenses/opencl-mesa"
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/opencl-mesa/"
@@ -86,7 +82,7 @@ package_libva-mesa-driver() {
   depends=('libdrm' 'libx11' 'llvm-libs' 'expat' 'elfutils')
 
   install -m755 -d ${pkgdir}/usr/lib
-  mv -v ${srcdir}/fakeinstall/usr/lib/dri ${pkgdir}/usr/lib
+  cp -rv ${srcdir}/fakeinstall/usr/lib/dri ${pkgdir}/usr/lib
    
   install -m755 -d "${pkgdir}/usr/share/licenses/libva-mesa-driver"
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/libva-mesa-driver/"
@@ -97,7 +93,7 @@ package_mesa-vdpau() {
   depends=('libdrm' 'libx11' 'llvm-libs' 'expat' 'elfutils')
 
   install -m755 -d ${pkgdir}/usr/lib
-  mv -v ${srcdir}/fakeinstall/usr/lib/vdpau ${pkgdir}/usr/lib
+  cp -rv ${srcdir}/fakeinstall/usr/lib/vdpau ${pkgdir}/usr/lib
    
   install -m755 -d "${pkgdir}/usr/share/licenses/mesa-vdpau"
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/mesa-vdpau/"
@@ -118,24 +114,24 @@ package_mesa() {
             'ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri')
 
   install -m755 -d ${pkgdir}/etc
-  mv -v ${srcdir}/fakeinstall/etc/drirc ${pkgdir}/etc
+  cp -rv ${srcdir}/fakeinstall/etc/drirc ${pkgdir}/etc
   
   install -m755 -d ${pkgdir}/usr/lib/xorg/modules/dri
   # ati-dri, nouveau-dri, intel-dri, svga-dri, swrast
-  mv -v ${srcdir}/fakeinstall/usr/lib/xorg/modules/dri/* ${pkgdir}/usr/lib/xorg/modules/dri
+  cp -rv ${srcdir}/fakeinstall/usr/lib/xorg/modules/dri/* ${pkgdir}/usr/lib/xorg/modules/dri
    
-  mv -v ${srcdir}/fakeinstall/usr/lib/bellagio  ${pkgdir}/usr/lib
-  mv -v ${srcdir}/fakeinstall/usr/lib/d3d  ${pkgdir}/usr/lib
-  mv -v ${srcdir}/fakeinstall/usr/lib/*.so* ${pkgdir}/usr/lib/
+  cp -rv ${srcdir}/fakeinstall/usr/lib/bellagio  ${pkgdir}/usr/lib
+  cp -rv ${srcdir}/fakeinstall/usr/lib/d3d  ${pkgdir}/usr/lib
+  cp -rv ${srcdir}/fakeinstall/usr/lib/*.so* ${pkgdir}/usr/lib/
 
-  mv -v ${srcdir}/fakeinstall/usr/include ${pkgdir}/usr
-  mv -v ${srcdir}/fakeinstall/usr/lib/pkgconfig ${pkgdir}/usr/lib/
+  cp -rv ${srcdir}/fakeinstall/usr/include ${pkgdir}/usr
+  cp -rv ${srcdir}/fakeinstall/usr/lib/pkgconfig ${pkgdir}/usr/lib/
   
   install -m755 -d ${pkgdir}/usr/lib/mesa
   # move libgl/EGL/glesv*.so to not conflict with blobs - may break .pc files ?
-  mv -v ${pkgdir}/usr/lib/libGL.so* 	${pkgdir}/usr/lib/mesa/
-  mv -v ${pkgdir}/usr/lib/libEGL.so* 	${pkgdir}/usr/lib/mesa/
-  mv -v ${pkgdir}/usr/lib/libGLES*.so*	${pkgdir}/usr/lib/mesa/
+  cp -rv ${pkgdir}/usr/lib/libGL.so* 	${pkgdir}/usr/lib/mesa/
+  cp -rv ${pkgdir}/usr/lib/libEGL.so* 	${pkgdir}/usr/lib/mesa/
+  cp -rv ${pkgdir}/usr/lib/libGLES*.so*	${pkgdir}/usr/lib/mesa/
 
   install -m755 -d "${pkgdir}/usr/share/licenses/mesa"
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/mesa/"
