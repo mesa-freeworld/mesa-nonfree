@@ -1,0 +1,22 @@
+diff -rupN a/src/glx/drisw_glx.c b/src/glx/drisw_glx.c
+--- a/src/glx/drisw_glx.c	2022-11-17 00:02:11.000000000 +0100
++++ b/src/glx/drisw_glx.c	2022-11-22 16:57:14.592161043 +0100
+@@ -884,16 +884,9 @@ check_xshm(Display *dpy)
+    xcb_void_cookie_t cookie;
+    xcb_generic_error_t *error;
+    int ret = True;
+-   xcb_query_extension_cookie_t shm_cookie;
+-   xcb_query_extension_reply_t *shm_reply;
+-   bool has_mit_shm;
++   int ignore;
+
+-   shm_cookie = xcb_query_extension(c, 7, "MIT-SHM");
+-   shm_reply = xcb_query_extension_reply(c, shm_cookie, NULL);
+-
+-   has_mit_shm = shm_reply->present;
+-   free(shm_reply);
+-   if (!has_mit_shm)
++   if (!XQueryExtension(dpy, "MIT-SHM", &xshm_opcode, &ignore, &ignore))
+       return False;
+
+    cookie = xcb_shm_detach_checked(c, 0);
