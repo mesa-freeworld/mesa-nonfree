@@ -81,7 +81,7 @@ build() {
     -D valgrind=enabled
 
   # Print config
-  meson configure build
+  meson configure --no-pager build
 
   ninja -C build
   meson compile -C build
