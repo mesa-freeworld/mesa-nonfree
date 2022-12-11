@@ -6,7 +6,7 @@
 pkgbase=mesa
 pkgname=('vulkan-mesa-layers' 'opencl-mesa' 'vulkan-intel' 'vulkan-radeon' 'vulkan-swrast' 'libva-mesa-driver' 'mesa-vdpau' 'mesa')
 pkgdesc="An open-source implementation of the OpenGL specification"
-pkgver=22.2.4
+pkgver=22.2.5
 pkgrel=1
 arch=('x86_64')
 makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence' 'libxxf86vm'
@@ -21,7 +21,7 @@ source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
         0002-intel-fs-always-mask-the-bottom-bits-of-the-sampler.patch
         0003-revert-68e89401140d1b3a17052899c54577de3f008b67.patch
         LICENSE)
-sha512sums=('fa4aa916e57137c758052ee5190d291e6d637f9ec809de54b64bddf5d2fdeafeb3389cd60d44203502e3d93b2563c84182b77a0d4d180bc438fc8064864426c6'
+sha512sums=('9039cf31e719b66a6ecea48e7f871d187333a1accd3fa77ce2cb36ce539682dd50f09bccc11a0c35760051768108699cf90dfb0936809faf1e1294cc5d1ec0af'
             'SKIP'
             '9bf47019a7c1da6724393cf571c6e1ce6b56ca24fe32045bc056d2e1bb2584f6a81e886dd8b2f1b1aabb953367dd068f9833f520fa41a9b2bbce20fdc15d07b4'
             '3df104f4abbecb12fcf9631cabdc7fe883b6c529abebaf36a0d47933ebd0c57235f11767060604dec71acefdf55f2f025eb997b1dd1cf0b92c02af0a604cae98'
