@@ -45,7 +45,7 @@ build() {
   CFLAGS+=' -g1'
   CXXFLAGS+=' -g1'
 
-  arch-meson mesa-$pkgver build \
+  arch-meson mesa-$pkgver --no-pager build \
     -D b_ndebug=true \
     -D b_lto=false \
     -D platforms=x11,wayland \
