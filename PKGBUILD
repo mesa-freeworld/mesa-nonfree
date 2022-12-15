@@ -46,7 +46,7 @@ build() {
   CXXFLAGS+=' -g1'
 
   arch-meson mesa-$pkgver --no-pager build \
-    -D b_ndebug=true \
+    -D b_ndebug=false \
     -D b_lto=false \
     -D platforms=x11,wayland \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,crocus,zink,d3d12 \
