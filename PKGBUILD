@@ -19,12 +19,10 @@ license=('custom')
 options=('!debug' '!lto')
 source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
         0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft.patch
-        0002-revert-68e89401140d1b3a17052899c54577de3f008b67.patch
         LICENSE)
 sha512sums=('8a7aee67f6351de293d23425229eb7c42d6918fe9ffb46c6e5df9609f79633c98ab78e892507fe48055c51fa88bf103d7b7baa58e826b1758f66067048baed5b'
             'SKIP'
             'ccdc1e367262338073b078f80795143026d08fa3fb720afda968907e1b4fa3b12e44edb441d3e17f6836f631319d1f1c3112699bea67014c3cf911fb9a816a3b'
-            'ad4d00b409328c6666dc9c3396aa00e5514873d9f4559c8b21dbc4c45cc15ffd4cd412f78e1f04dbd50300eb96d9b66bba8fc019f84a42356c134534031f9927'
             '8b6a2efe7156a14fe13beaa1280f757fbe897fdfed91641099b634200cf0ea38625a9e599b0bcfa7671e9fad1fdeacf8f64125b4446190cdc369ae6b8148d376')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
@@ -40,9 +38,6 @@ prepare() {
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/17247
   # https://github.com/HansKristian-Work/vkd3d-proton/issues/1200
   patch -Np1 -i ../0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft.patch
-  
-  # https://github.com/calamares/calamares/issues/2074
-  patch -Np1 -i ../0002-revert-68e89401140d1b3a17052899c54577de3f008b67.patch
 }
 
 build() {
@@ -79,7 +74,6 @@ build() {
     -D osmesa=true \
     -D shared-glapi=enabled \
     -D microsoft-clc=disabled \
-    -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
     -D valgrind=enabled
 
   # Print config
