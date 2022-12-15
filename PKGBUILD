@@ -6,25 +6,24 @@
 pkgbase=mesa
 pkgname=('vulkan-mesa-layers' 'opencl-mesa' 'vulkan-intel' 'vulkan-radeon' 'vulkan-swrast' 'libva-mesa-driver' 'mesa-vdpau' 'mesa')
 pkgdesc="An open-source implementation of the OpenGL specification"
-pkgver=22.2.5
+pkgver=22.3.1
 pkgrel=1
 arch=('x86_64')
 makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence' 'libxxf86vm'
              'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'zstd' 'elfutils' 'llvm'
              'libomxil-bellagio' 'libclc' 'clang' 'libglvnd' 'libunwind' 'lm_sensors' 'libxrandr'
              'systemd' 'valgrind' 'glslang' 'vulkan-icd-loader' 'directx-headers' 'cmake' 'meson')
+makedepends+=('rust' 'rust-bindgen' 'spirv-tools' 'spirv-llvm-translator') # rusticl dependencies
 url="https://www.mesa3d.org/"
 license=('custom')
-options=('!lto')
+options=('!debug' '!lto')
 source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
         0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft.patch
-        0002-intel-fs-always-mask-the-bottom-bits-of-the-sampler.patch
-        0003-revert-68e89401140d1b3a17052899c54577de3f008b67.patch
+        0002-revert-68e89401140d1b3a17052899c54577de3f008b67.patch
         LICENSE)
-sha512sums=('9039cf31e719b66a6ecea48e7f871d187333a1accd3fa77ce2cb36ce539682dd50f09bccc11a0c35760051768108699cf90dfb0936809faf1e1294cc5d1ec0af'
+sha512sums=('8a7aee67f6351de293d23425229eb7c42d6918fe9ffb46c6e5df9609f79633c98ab78e892507fe48055c51fa88bf103d7b7baa58e826b1758f66067048baed5b'
             'SKIP'
-            '9bf47019a7c1da6724393cf571c6e1ce6b56ca24fe32045bc056d2e1bb2584f6a81e886dd8b2f1b1aabb953367dd068f9833f520fa41a9b2bbce20fdc15d07b4'
-            '3df104f4abbecb12fcf9631cabdc7fe883b6c529abebaf36a0d47933ebd0c57235f11767060604dec71acefdf55f2f025eb997b1dd1cf0b92c02af0a604cae98'
+            'ccdc1e367262338073b078f80795143026d08fa3fb720afda968907e1b4fa3b12e44edb441d3e17f6836f631319d1f1c3112699bea67014c3cf911fb9a816a3b'
             'ad4d00b409328c6666dc9c3396aa00e5514873d9f4559c8b21dbc4c45cc15ffd4cd412f78e1f04dbd50300eb96d9b66bba8fc019f84a42356c134534031f9927'
             '8b6a2efe7156a14fe13beaa1280f757fbe897fdfed91641099b634200cf0ea38625a9e599b0bcfa7671e9fad1fdeacf8f64125b4446190cdc369ae6b8148d376')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -41,17 +40,22 @@ prepare() {
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/17247
   # https://github.com/HansKristian-Work/vkd3d-proton/issues/1200
   patch -Np1 -i ../0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft.patch
-  patch -Np1 -i ../0002-intel-fs-always-mask-the-bottom-bits-of-the-sampler.patch
-  patch -Np1 -i ../0003-revert-68e89401140d1b3a17052899c54577de3f008b67.patch
+  
+  # https://github.com/calamares/calamares/issues/2074
+  patch -Np1 -i ../0002-revert-68e89401140d1b3a17052899c54577de3f008b67.patch
 }
 
 build() {
+  # Build only minimal debug info to reduce size
+  CFLAGS+=' -g1'
+  CXXFLAGS+=' -g1'
+
   arch-meson mesa-$pkgver build \
-    -D b_ndebug=false \
+    -D b_ndebug=true \
     -D b_lto=false \
     -D platforms=x11,wayland \
-    -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,iris,crocus,zink,d3d12 \
-    -D vulkan-drivers=amd,intel,swrast \
+    -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,crocus,zink,d3d12 \
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast \
     -D vulkan-layers=device-select,intel-nullhw,overlay \
     -D dri3=enabled \
     -D egl=enabled \
@@ -62,7 +66,8 @@ build() {
     -D gallium-va=enabled \
     -D gallium-vdpau=enabled \
     -D gallium-xa=enabled \
-    -D gallium-xvmc=disabled \
+    -D gallium-rusticl=true \
+    -D rust_std=2021 \
     -D gbm=enabled \
     -D gles1=disabled \
     -D gles2=enabled \
@@ -74,10 +79,11 @@ build() {
     -D osmesa=true \
     -D shared-glapi=enabled \
     -D microsoft-clc=disabled \
+    -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
     -D valgrind=enabled
 
   # Print config
-  meson configure --no-pager build
+  meson configure build
 
   ninja -C build
   meson compile -C build
@@ -112,7 +118,7 @@ package_vulkan-mesa-layers() {
 }
 
 package_opencl-mesa() {
-  pkgdesc="OpenCL support for AMD/ATI Radeon mesa drivers"
+  pkgdesc="OpenCL support with clover and rusticl for mesa drivers"
   depends=('libdrm' 'libclc' 'clang' 'expat')
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
@@ -130,8 +136,8 @@ package_vulkan-intel() {
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
   provides=('vulkan-driver')
 
-  _install fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json
-  _install fakeinstall/usr/lib/libvulkan_intel.so
+  _install fakeinstall/usr/share/vulkan/icd.d/intel_*.json
+  _install fakeinstall/usr/lib/libvulkan_intel*.so
 
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
