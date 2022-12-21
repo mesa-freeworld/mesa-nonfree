@@ -45,7 +45,7 @@ build() {
   CFLAGS+=' -g1'
   CXXFLAGS+=' -g1'
 
-  arch-meson mesa-$pkgver --no-pager build \
+  arch-meson mesa-$pkgver build \
     -D b_ndebug=false \
     -D b_lto=false \
     -D platforms=x11,wayland \
@@ -77,7 +77,7 @@ build() {
     -D valgrind=enabled
 
   # Print config
-  meson configure build
+  meson configure --no-pager build
 
   ninja -C build
   meson compile -C build
