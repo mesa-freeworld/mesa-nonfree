@@ -4,10 +4,10 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=mesa
-pkgname=('vulkan-mesa-layers' 'opencl-mesa' 'vulkan-intel' 'vulkan-radeon' 'vulkan-swrast' 'libva-mesa-driver' 'mesa-vdpau' 'mesa')
+pkgname=('vulkan-mesa-layers' 'opencl-mesa' 'vulkan-intel' 'vulkan-radeon' 'vulkan-swrast' 'vulkan-virtio' 'libva-mesa-driver' 'mesa-vdpau' 'mesa')
 pkgdesc="An open-source implementation of the OpenGL specification"
 pkgver=22.3.2
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence' 'libxxf86vm'
              'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'zstd' 'elfutils' 'llvm'
@@ -41,16 +41,12 @@ prepare() {
 }
 
 build() {
-  # Build only minimal debug info to reduce size
-  CFLAGS+=' -g1'
-  CXXFLAGS+=' -g1'
-
   arch-meson mesa-$pkgver build \
     -D b_ndebug=false \
     -D b_lto=false \
     -D platforms=x11,wayland \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,crocus,zink,d3d12 \
-    -D vulkan-drivers=amd,intel,intel_hasvk,swrast \
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental \
     -D vulkan-layers=device-select,intel-nullhw,overlay \
     -D dri3=enabled \
     -D egl=enabled \
@@ -113,7 +109,7 @@ package_vulkan-mesa-layers() {
 
 package_opencl-mesa() {
   pkgdesc="OpenCL support with clover and rusticl for mesa drivers"
-  depends=('libdrm' 'libclc' 'clang' 'expat')
+  depends=('libdrm' 'libclc' 'clang' 'expat' 'spirv-llvm-translator')
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
 
@@ -163,10 +159,23 @@ package_vulkan-swrast() {
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
 
+package_vulkan-virtio() {
+  pkgdesc="Venus Vulkan mesa driver for Virtual Machines"
+  depends=('wayland' 'libx11' 'libxshmfence' 'libdrm' 'zstd' 'systemd-libs')
+  optdepends=('vulkan-mesa-layers: additional vulkan layers')
+  provides=('vulkan-driver')
+
+  _install fakeinstall/usr/share/vulkan/icd.d/virtio_icd*.json
+  _install fakeinstall/usr/lib/libvulkan_virtio.so
+
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
+}
+
 package_libva-mesa-driver() {
-  pkgdesc="VA-API implementation for gallium"
+  pkgdesc="VA-API drivers"
   depends=('libdrm' 'libx11' 'llvm-libs' 'expat' 'libelf' 'libxshmfence')
   depends+=('libexpat.so')
+  provides=('libva-driver')
 
   _install fakeinstall/usr/lib/dri/*_drv_video.so
 
@@ -174,9 +183,10 @@ package_libva-mesa-driver() {
 }
 
 package_mesa-vdpau() {
-  pkgdesc="Mesa VDPAU drivers"
+  pkgdesc="VDPAU drivers"
   depends=('libdrm' 'libx11' 'llvm-libs' 'expat' 'libelf' 'libxshmfence')
   depends+=('libexpat.so')
+  provides=('vdpau-driver')
 
   _install fakeinstall/usr/lib/vdpau
 
