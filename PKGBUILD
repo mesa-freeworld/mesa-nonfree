@@ -22,7 +22,7 @@ source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
         LICENSE)
 sha512sums=('32934dd23cfcd6165c365597d9a469da0b806b72ea98a200f499344c3b47815db3bf78875b4ea766d2d28d9c70b50c1615d2d3fcbfd4769447fe0a9d3b32951f'
             'SKIP'
-            'ccdc1e367262338073b078f80795143026d08fa3fb720afda968907e1b4fa3b12e44edb441d3e17f6836f631319d1f1c3112699bea67014c3cf911fb9a816a3b'
+            'd02f3fd44cf95b7dbfd607a58b764bd79d02b8b8586acd37bd4b2340aea171410b2b5eda7eab5c5d2c87bbf512e2322d5468f95aab0bfedeabc5367ebdee3b1d'
             '8b6a2efe7156a14fe13beaa1280f757fbe897fdfed91641099b634200cf0ea38625a9e599b0bcfa7671e9fad1fdeacf8f64125b4446190cdc369ae6b8148d376')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
