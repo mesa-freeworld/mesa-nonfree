@@ -1,0 +1,36 @@
+name: rebase
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '*/30 * * * *'
+  
+env:
+  UPSTREAM_GIT: https://gitlab.manjaro.org/packages/extra/mesa.git
+
+jobs:
+  rebase:
+    runs-on: ubuntu-latest
+    steps:
+    - 
+      name: checkout
+      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      with:
+        token: ${{ secrets.PUSH_AND_TRIGGER }}
+        fetch-depth: 0
+    - 
+      name: add ssh pk
+      if: ${{ contains(env.UPSTREAM_GIT, 'ssh') }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_BASE64 }}" | base64 -d >~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
+        [ -f .github/additional_known_hosts ] && cat .github/additional_known_hosts >> ~/.ssh/known_hosts
+    - 
+      name: check if behind upstream
+      run: |
+        if [[ "$UPSTREAM_GIT" == *"UPSTREAM"* ]];then exit 0;fi
+        git remote add upstream ${UPSTREAM_GIT}
+        git fetch upstream
+        git config --global user.email "info@manjaro-sway.download"
+        git config --global user.name "Manjaro Sway"
+        git rebase upstream/$(git branch --show-current) && git push --force-with-lease

@@ -1,0 +1,38 @@
+name: increment pkgrel
+
+on:
+  workflow_dispatch:
+    inputs:
+      pkgrel:
+        description: 'pkgrel to set - will iterate if not given'     
+        required: false
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  increment:
+    runs-on: ubuntu-latest
+    steps:
+    - 
+      name: checkout
+      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      with:
+        token: ${{ secrets.PUSH_AND_TRIGGER }}
+    - 
+      name: increment_rel
+      run: |
+        CURRENT_VERSION=$(cat PKGBUILD | grep pkgrel | sed -e 's/^pkgrel=//')
+        INPUT_VERSION=${{ github.event.inputs.pkgrel }}
+        NEXT_VERSION=$((CURRENT_VERSION + 1))
+        sed -i "/pkgrel=/c\pkgrel=${INPUT_VERSION:-${NEXT_VERSION}}" PKGBUILD
+
+        git config user.name increment-version-action
+        git config user.email info@manjaro-sway.download
+    - 
+      name: commit
+      run: |
+        git add PKGBUILD
+        git commit -m "release: increment rel"
+        git push

@@ -1,0 +1,19 @@
+name: "forward-all-contributors"
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  add-contributors:
+    runs-on: ubuntu-latest
+    steps:
+    - name: create comment in target repo
+      uses: peter-evans/create-or-update-comment@5adcb0bb0f9fb3f95ef05400558bdb3f329ee808 # v2
+      if: contains(github.event.comment.body, '@all-contributors')
+      with:
+        issue-number: 73
+        repository: manjaro-sway/manjaro-sway
+        body: ${{ github.event.comment.body }}
+        token: ${{ secrets.PUSH_AND_TRIGGER }}

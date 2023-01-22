@@ -1,0 +1,36 @@
+name: set version to src version
+
+on:
+  repository_dispatch:
+    types: [source_update]
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: check out the repo
+        id: checkout_repo
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          token: ${{ secrets.PUSH_AND_TRIGGER }}
+      -
+        name: update pkgbuild
+        env:
+          VERSION: ${{ github.event.client_payload.version }}
+          MD5: ${{ github.event.client_payload.md5 }}
+        run: |
+          [ -n "$VERSION" ] && sed -i "/pkgver=/c\pkgver=${VERSION}" PKGBUILD || exit 0
+          [ -n "$MD5" ] && sed -i "/_sourcemd5=/c\_sourcemd5=${MD5}" PKGBUILD || exit 0
+      - 
+        name: commit
+        run: |
+          git config --global user.name "Repo Update Bot"
+          git config --global user.email "info@manjaro-sway.download"
+          git add PKGBUILD
+          git commit -m "chore: release version ${{ github.event.client_payload.version }}"
+          git push

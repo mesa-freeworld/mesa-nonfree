@@ -1,0 +1,47 @@
+name: resubmit the release
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '20 1-23/2 * * *'
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  resubmit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: determine skip
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" || $(( RANDOM % 6 )) == 0 ]];
+          then 
+            echo "SKIP=false" >> $GITHUB_ENV
+          fi
+      - 
+        id: version
+        if: ${{ env.SKIP == 'false' }}
+        run: |
+          LATEST_INFO=$(curl --silent "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+          echo "file-name-aarch64=$(echo $LATEST_INFO | jq -r '.assets[].name' | grep -m1 aarch64)" >>$GITHUB_OUTPUT
+          echo "file-name-x86_64=$(echo $LATEST_INFO | jq -r '.assets[].name' | grep -m1 -E -i -w '(x86_64|any)')" >>$GITHUB_OUTPUT
+          echo "VERSION=$(echo $LATEST_INFO | jq -r '.tag_name')" >> $GITHUB_ENV
+      - 
+        name: dispatch_aarch64
+        if: ${{ env.SKIP == 'false' && steps.version.outputs.file-name-aarch64 != '' }}
+        uses: peter-evans/repository-dispatch@26b39ed245ab8f31526069329e112ab2fb224588 # v2
+        with:
+          token: ${{ secrets.DISPATCH }}
+          repository: manjaro-sway/packages
+          event-type: package_update
+          client-payload: '{ "repository": "${{ github.repository }}", "version": "${{ env.VERSION }}", "file_name": "${{ steps.version.outputs.file-name-aarch64 }}"}'
+      - 
+        name: dispatch_x86_64
+        if: ${{ env.SKIP == 'false' && steps.version.outputs.file-name-x86_64 != '' }}
+        uses: peter-evans/repository-dispatch@26b39ed245ab8f31526069329e112ab2fb224588 # v2
+        with:
+          token: ${{ secrets.DISPATCH }}
+          repository: manjaro-sway/packages
+          event-type: package_update
+          client-payload: '{ "repository": "${{ github.repository }}", "version": "${{ env.VERSION }}", "file_name": "${{ steps.version.outputs.file-name-x86_64 }}"}'
