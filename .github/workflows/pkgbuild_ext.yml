@@ -1,0 +1,47 @@
+name: pkgbuild
+
+on:
+  workflow_dispatch:
+    inputs:
+      force-update:
+        description: 'update artifacts'
+        required: false
+        default: 'false'
+  push:
+    branches:
+      - master
+      - main
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  pkgbuild:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        archlinux_arch: [aarch64, x86_64]
+        include:
+          - archlinux_arch: aarch64
+            docker_arch: aarch64
+          - archlinux_arch: x86_64
+            docker_arch: amd64
+    name: pkgbuild for ${{ matrix.archlinux_arch }}
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: pkgbuild
+        id: pkgbuild
+        uses: Manjaro-Sway/manjaro-package-action@main
+        with:
+          docker_arch: ${{ matrix.docker_arch }}
+          archlinux_arch: ${{ matrix.archlinux_arch }}
+          gpg_keyid: ${{ secrets.GPG_KEYID }}
+          gpg_signing_key_base64: ${{ secrets.GPG_SECRET_KEY_BASE64 }}
+          dispatch-token: ${{ secrets.DISPATCH }}
+          force-update: ${{ github.event.inputs.force-update }}
+          before_publish: ls -1 artifacts/* | grep -vE '^artifacts/mesa-[0-9]' | xargs rm -f 
