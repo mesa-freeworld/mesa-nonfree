@@ -1,0 +1,47 @@
+name: pkgbuild
+
+on:
+  repository_dispatch:
+    types: 
+      - rebase
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  pkgbuild:
+    name: pkgbuild for ${{ matrix.archlinux_arch }} for ${{ matrix.branch }}
+    runs-on: ${{ matrix.runs-on }}
+    permissions:
+      contents: write
+      packages: write
+    strategy:
+      matrix:
+        arch: [x86_64]
+        branch: [stable, testing, unstable]
+        runs-on: [ubuntu-latest]
+    container:
+      image: docker://manjarolinux/build:latest
+    steps:
+      - name: check out repo
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - id: version
+        uses: manjaro-contrib/action-pkgbuild-info@main
+        with:
+          pkgbuild: ${{ matrix.pkgbuild }}
+      - name: pkgbuild
+        uses: manjaro-contrib/action-makepkg@main
+        with:
+          arch: ${{ matrix.arch }}
+          branch: ${{ matrix.branch }}
+          release: ${{ matrix.branch }}-${{ steps.version.outputs.version }}
+          dispatch-target: ${{ github.repository }}
+          dispatch-token: ${{ github.token }}
+          gpg_secret_base64: ${{ secrets.gpg_secret_base64 }}
+          additional_gpg: >
+            8D8E31AFC32428A6
