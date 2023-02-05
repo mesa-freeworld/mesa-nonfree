@@ -50,7 +50,7 @@ jobs:
           repository: ${{ env.repository }}
           release: ${{ env.release }}
           branch: ${{ env.branch }}
-          gpg_keyid: ${{ secrets.gpg_keyid }}
+          gpg_keyid: ${{ vars.gpg_keyid }}
           gpg_secret_base64: ${{ secrets.gpg_secret_base64 }}
   publish:
     runs-on: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
       - name: copy gpg_keyid into place
         run: |
           mkdir -p docs/_includes
-          echo ${{ secrets.gpg_keyid }} >docs/_includes/keyid.asc
+          echo ${{ vars.gpg_keyid }} >docs/_includes/keyid.asc
       - name: Build Jekyll for GitHub Pages
         uses: actions/jekyll-build-pages@v1
         with:
