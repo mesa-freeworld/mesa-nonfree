@@ -28,7 +28,7 @@ env:
 
 concurrency:
   ## fallbacks only needed for push-events
-  group: ${{ github.event.client_payload.repository || inputs.repositor }}-${{ github.event.client_payload.branch || inputs.branch }}
+  group: ${{ github.event.client_payload.repository || inputs.repository }}-${{ github.event.client_payload.branch || inputs.branch }}
   cancel-in-progress: true
 
 jobs:
