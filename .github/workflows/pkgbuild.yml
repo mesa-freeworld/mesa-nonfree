@@ -36,6 +36,9 @@ jobs:
         branch: ${{ fromJSON(needs.version.outputs.branches) }}
         runs-on: ${{ fromJSON(needs.version.outputs.runs-on) }}
     runs-on: ${{ matrix.runs-on }}
+    permissions:
+      contents: write
+      packages: write
     container:
       image: docker://manjarolinux/build:latest
     steps:
