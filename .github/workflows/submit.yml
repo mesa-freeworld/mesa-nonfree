@@ -22,6 +22,6 @@ jobs:
       - name: submit
         uses: manjaro-contrib/action-submit@main
         with:
-          dispatch-token: ${{ github.token }}
-          dispatch-target: ${{ github.repository }}
+          dispatch-target: ${{ vars.PACKAGES_REPO }}
+          dispatch-token: ${{ secrets.DISPATCH_TOKEN }}
           branch: ${{ matrix.branch }}
