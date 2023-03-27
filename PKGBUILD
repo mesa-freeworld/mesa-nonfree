@@ -10,8 +10,8 @@
 pkgbase=mesa
 pkgname=('vulkan-mesa-layers' 'opencl-mesa' 'vulkan-intel' 'vulkan-radeon' 'vulkan-swrast' 'vulkan-virtio' 'libva-mesa-driver' 'mesa-vdpau' 'mesa')
 pkgdesc="An open-source implementation of the OpenGL specification"
-pkgver=22.3.7
-pkgrel=2
+pkgver=23.0.1
+pkgrel=1
 arch=('x86_64')
 makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence' 'libxxf86vm'
              'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'zstd' 'elfutils' 'llvm'
@@ -20,18 +20,21 @@ makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence
 makedepends+=('rust' 'rust-bindgen' 'spirv-tools' 'spirv-llvm-translator') # rusticl dependencies
 url="https://www.mesa3d.org/"
 license=('custom')
-options=('!lto')
+options=('lto')
 source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
-        0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft.patch
-        0002-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
-        0003-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
+        0001-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
+        0002-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
         LICENSE)
-sha512sums=('c37bbcb3c0be1908726d6f83bfe98126d681935e401e03946e8b540611f832d2f272a2ac470600c2b77caa5b9a3a9059eb34bd9a93fcf88df114bedf8c39bf5a'
+sha256sums=('e8e586856b55893abae9bdcdb98b41c081d909bb1faf372e6e7262307bf34adf'
             'SKIP'
-            '44981f1f86b72eec0a358d1764546443a7e6734a074e1e15929dc4312fe660eab1a04b8a8359c5f57b6f5815cbe149677f5b3f0e3919112e78c6ec1f64a97b61'
-            'c181cc258a3a96817f9733be53e0ddf3f5b093ec8d7b731e37c095077c1b423d13ddb902993e1056aed29c4163421e4873b64f7593ef5e39d8cba11516651724'
-            '4f3ef686b2244c5da033596336bdffa42f9f55061be7125cba47a5ae3c16037523d1ba9d17269d141498b8ad2e020f25d9d778fdf307329809fc25d30d59c470'
-            'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
+            '99264c77d63d6fa810e295914808cde9f580a64e913e99fa794c1aa25a4f8fb2'
+            'd6ef8fb1809e8aeae0ec32bfe916adb770c64880bfd3d0f4472a616c9f356a9a'
+            '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
+b2sums=('50d358e393037381d0d848f868ac3439b0851809c3533432dc428bd77e81bc71bbfd2b598e221b6e8c4c2528ef32e5624aec4fe2e552e01ee98abbcf96a1f5b7'
+        'SKIP'
+        'a90bfc47fb3a46eff1ef2455c7aa18c2bb515ec217b423d0a87cc5f3b824a77c0381e1378498464418644108142022dcd3c289e157877c6ae7584beaec1d9987'
+        'bd52994305fc0fa2f12c46ea3208bbb24f97495d9bad73120d83a6cdcf7e48f5ff0d14ac0055765516b70caacdf024fca4159b70b054e85f2783c78c9218aefe'
+        '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
               'E3E8F480C52ADD73B278EE78E1ECBE07D7D70895'  # Juan Antonio Suárez Romero (Igalia, S.L.) <jasuarez@igalia.com>
@@ -42,21 +45,15 @@ validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l
 prepare() {
   cd mesa-$pkgver
 
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/7111
-  # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/17247
-  # https://github.com/HansKristian-Work/vkd3d-proton/issues/1200
-  patch -Np1 -i ../0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft.patch
-
   # https://gitlab.freedesktop.org/drm/intel/-/issues/6851
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/20449
-  patch -Np1 -i ../0002-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
-  patch -Np1 -i ../0003-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
+  patch -Np1 -i ../0001-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
+  patch -Np1 -i ../0002-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
 }
 
 build() {
   arch-meson mesa-$pkgver build \
     -D b_ndebug=true \
-    -D b_lto=false \
     -D platforms=x11,wayland \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,crocus,zink,d3d12 \
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental \
