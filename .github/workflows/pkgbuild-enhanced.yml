@@ -40,6 +40,7 @@ jobs:
     needs: [version]
     if: ${{ needs.version.outputs.needed_branches != '' }}
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix:
         branch: ${{ fromJSON(needs.version.outputs.needed_branches) }}
@@ -52,7 +53,6 @@ jobs:
       - name: pkgbuild
         uses: manjaro-contrib/action-makepkg@main
         if: contains(needs.version.outputs.unreleased_branches, matrix.branch)
-        continue-on-error: true
         with:
           branch: ${{ matrix.branch }}
           release: ${{ matrix.branch }}-${{ needs.version.outputs.version }}
