@@ -25,18 +25,21 @@ source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
         0001-intel-fs-fix-scheduling-of-HALT-instructions.patch
         0002-egl-wayland-Fix-destruction-of-event-queue-with-prox.patch
         0003-vulkan-wsi-wayland-Fix-destruction-of-event-queue-wi.patch
+        https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/22484.patch
         LICENSE)
 sha256sums=('1b7d3399fc6f16f030361f925d33ebc7600cbf98094582f54775b6a1180529e7'
             'SKIP'
             'dc6790b5be0e80c23e74ae18ca1a2b40f57f4211cc7b645bf22b63af3b790e40'
             'c25493de3e5930702acf833d182aeca0895d6a9d9e830dca15c42d130e25c41c'
             'db2be7ae0540d65e77449eda1af66200e27af382183fdcd0c87f99db3520b80a'
+            '8fbd8ba958d29ab4f7e3ec94339bf630683310a92db3d625adf14df773a60939'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
 b2sums=('5a90fcd8b7096dde1e6c82b9bb5b00622cc1cf35e4308419441d3489d66ed322843db89f2f1162c8c30f6bcddbce867447f83425a29145bd42a742b773ec1258'
         'SKIP'
         '37d1d070c45c85bce8abe3524a3f8d9ac9ed6326a3eec653cd89fffce3630b08eb9b96b11aeb495488230449c99f9b508f73a15e53265d2b159286b0e2dda7cc'
         'ae891637318fdbb8dd58285098af7bea709fb032969a5671eb225a4a471bf9422fac2a6cb0fd188aad96ea5a03eb043f646f5d371dd655a100046adb1c91bd7d'
         'a7312e0931904e659b3d33fcb37b13bcadab943c6040dd2b58ea191db350b50c1ba588e334b7e59b513bd6155797e29dc1bd1a6a35a278b3824d06534f2c9d17'
+        'e1df3279a25ab0b414dbb8d8467cee4dc6f730b441299e86b1369d10237a6e3b96c9a59264c5e94adf6958cc8b8112f3824ad3e8cfa76fe56787084606180b1f'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
@@ -60,6 +63,11 @@ prepare() {
   # https://bugs.archlinux.org/task/78142
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21647
   patch -Np1 -i ../0003-vulkan-wsi-wayland-Fix-destruction-of-event-queue-wi.patch
+
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/8827
+  patch -Np1 -i ../22484.patch
+  sed -i "s/rust.bindgen_version().version_compare('< 0.65')/find_program('bindgen').version().version_compare('< 0.65')/g" \
+    src/gallium/frontends/rusticl/meson.build
 }
 
 build() {
