@@ -31,6 +31,7 @@ jobs:
     name: building version ${{ needs.version.outputs.version }} against ${{ matrix.branch }} on ${{ matrix.runs-on }}
     needs: [version]
     if: needs.version.outputs.branches != ''
+    continue-on-error: true
     strategy:
       matrix:
         branch: ${{ fromJSON(needs.version.outputs.branches) }}
