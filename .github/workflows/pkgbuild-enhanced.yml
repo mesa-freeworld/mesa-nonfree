@@ -1,0 +1,63 @@
+name: pkgbuild
+
+on:
+  repository_dispatch:
+    types:
+      - rebase
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+  schedule:
+    - cron:  '*/30 * * * *'
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
+
+jobs:
+  version:
+    name: gather information
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repo
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - id: version
+        uses: manjaro-contrib/action-pkgbuild-info@main
+      - name: upstream version
+        id: upstream
+        uses: manjaro-contrib/action-upstream-version@main
+        with:
+          name: mesa
+          version: ${{ steps.version.outputs.version }}
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      needed_branches: ${{ steps.upstream.outputs.branches_x86_64 }}
+      unreleased_branches: ${{ steps.version.outputs.branches }}
+  pkgbuild:
+    name: building version ${{ needs.version.outputs.version }} against ${{ matrix.branch }}
+    needs: [version]
+    if: ${{ needs.version.outputs.needed_branches != '' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        branch: ${{ fromJSON(needs.version.outputs.needed_branches) }}
+    permissions:
+      contents: write
+      packages: write
+    container:
+      image: docker://manjarolinux/build:latest
+    steps:
+      - name: pkgbuild
+        uses: manjaro-contrib/action-makepkg@main
+        if: contains(needs.version.outputs.unreleased_branches, matrix.branch)
+        with:
+          branch: ${{ matrix.branch }}
+          release: ${{ matrix.branch }}-${{ needs.version.outputs.version }}
+          dispatch-target: ${{ vars.PACKAGES_REPO }}
+          dispatch-token: ${{ secrets.DISPATCH_TOKEN }}
+          gpg_secret_base64: ${{ secrets.gpg_secret_base64 }}
+          additional_gpg: ${{ vars.ADDITIONAL_GPG }}
+          additional_repo: ${{ vars.ADDITIONAL_REPO }}

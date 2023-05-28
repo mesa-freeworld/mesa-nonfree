@@ -7,6 +7,8 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
+codecs="vc1dec,h264dec,h264enc,h265dec,h265enc"
+epoch=1
 pkgbase=mesa
 pkgname=(
   'vulkan-mesa-layers'
@@ -130,6 +132,7 @@ build() {
     -D platforms=x11,wayland
     -D rust_std=2021
     -D shared-glapi=enabled
+    -D video-codecs=$codecs \
     -D valgrind=enabled
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental
     -D vulkan-layers=device-select,intel-nullhw,overlay
