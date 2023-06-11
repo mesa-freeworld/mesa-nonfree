@@ -4,6 +4,6 @@
 
 ## x86_64 upstream
 
-![x86_64_unstable](https://img.shields.io/badge/dynamic/json?label=unstable&url=https://search.manjaro-sway.download/?query=mesa_x86_64_unstable&query=$[:1].version)
-![x86_64_testing](https://img.shields.io/badge/dynamic/json?label=testing&url=https://search.manjaro-sway.download/?query=mesa_x86_64_testing&query=$[:1].version)
-![x86_64_stable](https://img.shields.io/badge/dynamic/json?label=stable&url=https://search.manjaro-sway.download/?query=mesa_x86_64_stable&query=$[:1].version)
+![x86_64_unstable](https://img.shields.io/badge/dynamic/json?label=unstable&url=https%3A%2F%2Fsearch.manjaro-sway.download%2F%3Fname%3Dmesa%26arch%3Dx86_64%26branch%3Dunstable&query=$.version)
+![x86_64_testing](https://img.shields.io/badge/dynamic/json?label=testing&url=https%3A%2F%2Fsearch.manjaro-sway.download%2F%3Fname%3Dmesa%26arch%3Dx86_64%26branch%3Dtesting&query=$.version)
+![x86_64_stable](https://img.shields.io/badge/dynamic/json?label=stable&url=https%3A%2F%2Fsearch.manjaro-sway.download%2F%3Fname%3Dmesa%26arch%3Dx86_64%26branch%3Dstable&query=$.version)
