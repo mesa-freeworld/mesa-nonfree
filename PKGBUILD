@@ -193,7 +193,7 @@ package_opencl-clover-mesa() {
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
-  replaces=("mesa-opencl<=23.1.3-1")
+  replaces=("mesa-opencl<=23.1.3-3")
   conflicts=('opencl-mesa')
 
   _install fakeinstall/etc/OpenCL/vendors/mesa.icd
@@ -217,7 +217,7 @@ package_opencl-rusticl-mesa() {
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
-  replaces=("mesa-opencl<=23.1.3-1")
+  replaces=("mesa-opencl<=23.1.3-3")
   conflicts=('opencl-mesa')
 
   _install fakeinstall/etc/OpenCL/vendors/rusticl.icd
