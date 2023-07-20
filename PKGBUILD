@@ -21,7 +21,7 @@ pkgname=(
   'mesa'
 )
 pkgver=23.1.3
-pkgrel=5
+pkgrel=6
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -80,16 +80,16 @@ makedepends=(
 options=('lto')
 source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
-  mesa-staging-23.1-20230628.patch
+  mesa-staging-23.1-20230718.patch
   LICENSE
 )
 sha256sums=('2f6d7381bc10fbd2d6263ad1022785b8b511046c1a904162f8f7da18eea8aed9'
             'SKIP'
-            'ac2b0143df10ed1138b8a0371144e2fb2836eb844feed68cbfdbedc58c9fe045'
+            '828d9ff14ec181fc368c76097047e999ef7170d13186c8f0db15283c7152ec6f'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
 b2sums=('99ce2a458c049b60cf13278d5e2e04d9eebefe04d5cbfcba7ff13421724bfd7877ec24086e513d249f1e7b1d537acea90e2ae53d71ef420213a5764ce61d8c4f'
         'SKIP'
-        '3d5889fd5c7a6c95c5c98fb42b4289cdba18ceafdd3f713d164ca6ae1bff9da3f97ec13c74b54dee70cd1545164ec1ef7264ee84dd266422fa8b9d1a70d42a94'
+        '66d2b2106c5020e54926c72b5d46a6e08f0ce4e439de19fb18e8954ee324ded1eecc5b1b16425ade439db52437a2f10070b65e53d9f882d6da8f5ae421c65ea1'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
@@ -100,7 +100,7 @@ validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l
 
 prepare() {
   cd mesa-$pkgver
-  patch -p1 -i ../mesa-staging-23.1-20230628.patch
+  patch -p1 -i ../mesa-staging-23.1-20230718.patch
 }
 
 _libdir=usr/lib
