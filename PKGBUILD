@@ -17,7 +17,7 @@ pkgname=(
   'mesa'
 )
 pkgver=23.1.4
-pkgrel=1
+pkgrel=2
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -189,7 +189,7 @@ package_opencl-clover-mesa() {
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
-  replaces=("mesa-opencl<=23.1.3-1")
+  replaces=("opencl-mesa<=23.1.4-1")
   conflicts=('opencl-mesa')
 
   _install fakeinstall/etc/OpenCL/vendors/mesa.icd
@@ -213,7 +213,7 @@ package_opencl-rusticl-mesa() {
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
-  replaces=("mesa-opencl<=23.1.3-1")
+  replaces=("opencl-mesa<=23.1.4-1")
   conflicts=('opencl-mesa')
 
   _install fakeinstall/etc/OpenCL/vendors/rusticl.icd
