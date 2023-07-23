@@ -23,7 +23,7 @@ pkgname=(
   'mesa'
 )
 pkgver=23.1.4
-pkgrel=1
+pkgrel=3
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -82,16 +82,13 @@ makedepends=(
 options=('lto')
 source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
-  https://gitlab.freedesktop.org/mesa/mesa/-/commit/23c003b.patch
   LICENSE
 )
 sha256sums=('7261a17fb94867e3dc5a90d8a1f100fa04b0cbbde51d25302c0872b5e9a10959'
             'SKIP'
-            '0e21842eefde75413cb21ccb65f46c201862e61b0fc46b7c4c2251c434fd628e'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
 b2sums=('9c696766f4f7af9a2d12c6e7663f300e4dbcfc27ee210770151a8be76b3413b51aad1e2a00f4cf38695cf26d5b684e38a65de8a63723597a0ff97f3a9935b1a1'
         'SKIP'
-        '763ff5a3a75c579b2bf9d93380472da84ea7b9f9b87a5df50496e6586e309a07c394a057c91cde4b471e75852c7df938ac859c6ef60604326de9345b2e4f297c'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
@@ -102,11 +99,6 @@ validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l
 
 prepare() {
   cd mesa-$pkgver
-
-  # fix Chromium issues
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/9296
-  # https://gitlab.manjaro.org/packages/extra/mesa/-/issues/7
-  patch -p1 -i ../23c003b.patch
 }
 
 _libdir=usr/lib
@@ -200,7 +192,7 @@ package_opencl-clover-mesa() {
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
-  replaces=("mesa-opencl<=23.1.3-3")
+  replaces=("opencl-mesa<=23.1.3-3")
   conflicts=('opencl-mesa')
 
   _install fakeinstall/etc/OpenCL/vendors/mesa.icd
@@ -224,7 +216,7 @@ package_opencl-rusticl-mesa() {
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
-  replaces=("mesa-opencl<=23.1.3-3")
+  replaces=("opencl-mesa<=23.1.3-3")
   conflicts=('opencl-mesa')
 
   _install fakeinstall/etc/OpenCL/vendors/rusticl.icd
