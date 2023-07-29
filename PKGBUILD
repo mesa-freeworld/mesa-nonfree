@@ -16,8 +16,8 @@ pkgname=(
   'mesa-vdpau'
   'mesa'
 )
-pkgver=23.1.4
-pkgrel=2
+pkgver=23.2.0
+pkgrel=1
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -39,12 +39,16 @@ makedepends=(
   'libxxf86vm'
   'llvm'
   'lm_sensors'
+  'rust'
+  'spirv-llvm-translator'
+  'spirv-tools'
   'systemd'
   'vulkan-icd-loader'
   'wayland'
+  'xcb-util-keysyms'
   'zstd'
 
-  # shared with lib32-mesa
+  # shared between mesa and lib32-mesa
   'clang'
   'cmake'
   'elfutils'
@@ -52,6 +56,8 @@ makedepends=(
   'libclc'
   'meson'
   'python-mako'
+  'python-ply'
+  'rust-bindgen'
   'wayland-protocols'
   'xorgproto'
 
@@ -63,24 +69,15 @@ makedepends=(
 
   # gallium-omx deps
   'libomxil-bellagio'
-
-  # gallium-rusticl deps
-  'rust'
-  'rust-bindgen'
-  'spirv-tools'
-
-  # intel-clc deps
-  'python-ply'
-  'spirv-llvm-translator'
 )
 source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
   LICENSE
 )
-sha256sums=('7261a17fb94867e3dc5a90d8a1f100fa04b0cbbde51d25302c0872b5e9a10959'
+sha256sums=('1ee543dadc62eb9b11152a3045fec302b7a81cec1993cfd62e51b0e769a1c2df'
             'SKIP'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
-b2sums=('9c696766f4f7af9a2d12c6e7663f300e4dbcfc27ee210770151a8be76b3413b51aad1e2a00f4cf38695cf26d5b684e38a65de8a63723597a0ff97f3a9935b1a1'
+b2sums=('de0dfc701fe8ebfa424e8e915ada30ec1431b87a173e0d1fd9b76c215d28777b06940870336ea19169595ec878599fd11dcb321e684e84572a64c92987558b7d'
         'SKIP'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -94,11 +91,8 @@ prepare() {
   cd mesa-$pkgver
 }
 
-_libdir=usr/lib
-
 build() {
   local meson_options=(
-    --libdir=/$_libdir
     -D android-libbacktrace=disabled
     -D b_ndebug=true
     -D dri3=enabled
@@ -128,7 +122,7 @@ build() {
     -D shared-glapi=enabled
     -D valgrind=enabled
     -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
-    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio
     -D vulkan-layers=device-select,intel-nullhw,overlay
   )
 
@@ -154,6 +148,8 @@ _install() {
     mv -v "${src}" "${dir}/"
   done
 }
+
+_libdir=usr/lib
 
 package_vulkan-mesa-layers() {
   pkgdesc="Mesa's Vulkan layers"
@@ -182,10 +178,10 @@ package_opencl-clover-mesa() {
     'expat'
     'libdrm'
     'libelf'
+    'spirv-llvm-translator'
     'zstd'
 
     'libclc'
-    'spirv-llvm-translator'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
@@ -206,10 +202,11 @@ package_opencl-rusticl-mesa() {
     'expat'
     'libdrm'
     'libelf'
+    'lm_sensors'
+    'spirv-llvm-translator'
     'zstd'
 
     'libclc'
-    'spirv-llvm-translator'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
@@ -230,6 +227,7 @@ package_vulkan-intel() {
     'libxshmfence'
     'systemd'
     'wayland'
+    'xcb-util-keysyms'
     'zstd'
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -251,6 +249,7 @@ package_vulkan-radeon() {
     'llvm-libs'
     'systemd'
     'wayland'
+    'xcb-util-keysyms'
     'zstd'
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -273,6 +272,7 @@ package_vulkan-swrast() {
     'llvm-libs'
     'systemd'
     'wayland'
+    'xcb-util-keysyms'
     'zstd'
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -294,6 +294,7 @@ package_vulkan-virtio() {
     'libxshmfence'
     'systemd'
     'wayland'
+    'xcb-util-keysyms'
     'zstd'
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
