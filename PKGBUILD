@@ -16,8 +16,9 @@ pkgname=(
   'mesa-vdpau'
   'mesa'
 )
-pkgver=23.2.0
+pkgver=23.1.5
 pkgrel=1
+epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -45,7 +46,6 @@ makedepends=(
   'systemd'
   'vulkan-icd-loader'
   'wayland'
-  'xcb-util-keysyms'
   'zstd'
 
   # shared between mesa and lib32-mesa
@@ -74,10 +74,10 @@ source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
   LICENSE
 )
-sha256sums=('1ee543dadc62eb9b11152a3045fec302b7a81cec1993cfd62e51b0e769a1c2df'
+sha256sums=('3cf88576fdebf24fc4047067936131c90cb6541c27365996b79b661dec1fb153'
             'SKIP'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
-b2sums=('de0dfc701fe8ebfa424e8e915ada30ec1431b87a173e0d1fd9b76c215d28777b06940870336ea19169595ec878599fd11dcb321e684e84572a64c92987558b7d'
+b2sums=('9919de93df171dd884ef39f52e480e62ef7f4cd55e43b507316af7de39b222ddec12914628d136d40a80f8398f517708a67a64b99858bba3c86686956b7c91bc'
         'SKIP'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -122,7 +122,7 @@ build() {
     -D shared-glapi=enabled
     -D valgrind=enabled
     -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
-    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental
     -D vulkan-layers=device-select,intel-nullhw,overlay
   )
 
@@ -227,7 +227,6 @@ package_vulkan-intel() {
     'libxshmfence'
     'systemd'
     'wayland'
-    'xcb-util-keysyms'
     'zstd'
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -249,7 +248,6 @@ package_vulkan-radeon() {
     'llvm-libs'
     'systemd'
     'wayland'
-    'xcb-util-keysyms'
     'zstd'
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -272,7 +270,6 @@ package_vulkan-swrast() {
     'llvm-libs'
     'systemd'
     'wayland'
-    'xcb-util-keysyms'
     'zstd'
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
@@ -294,7 +291,6 @@ package_vulkan-virtio() {
     'libxshmfence'
     'systemd'
     'wayland'
-    'xcb-util-keysyms'
     'zstd'
   )
   optdepends=('vulkan-mesa-layers: additional vulkan layers')
