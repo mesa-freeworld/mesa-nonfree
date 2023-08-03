@@ -21,7 +21,7 @@ pkgname=(
   'mesa'
 )
 pkgver=23.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -43,12 +43,15 @@ makedepends=(
   'libxxf86vm'
   'llvm'
   'lm_sensors'
+  'rust'
+  'spirv-llvm-translator'
+  'spirv-tools'
   'systemd'
   'vulkan-icd-loader'
   'wayland'
   'zstd'
 
-  # shared with lib32-mesa
+  # shared between mesa and lib32-mesa
   'clang'
   'cmake'
   'elfutils'
@@ -56,6 +59,8 @@ makedepends=(
   'libclc'
   'meson'
   'python-mako'
+  'python-ply'
+  'rust-bindgen'
   'wayland-protocols'
   'xorgproto'
 
@@ -67,15 +72,6 @@ makedepends=(
 
   # gallium-omx deps
   'libomxil-bellagio'
-
-  # gallium-rusticl deps
-  'rust'
-  'rust-bindgen'
-  'spirv-tools'
-
-  # intel-clc deps
-  'python-ply'
-  'spirv-llvm-translator'
 )
 options=('lto')
 source=(
@@ -103,7 +99,6 @@ _libdir=usr/lib
 
 build() {
   local meson_options=(
-    --libdir=/$_libdir
     -D android-libbacktrace=disabled
     -D b_ndebug=true
     -D dri3=enabled
@@ -155,6 +150,8 @@ _install() {
   done
 }
 
+_libdir=usr/lib
+
 package_vulkan-mesa-layers() {
   pkgdesc="Mesa's Vulkan layers"
   depends=(
@@ -182,10 +179,10 @@ package_opencl-clover-mesa() {
     'expat'
     'libdrm'
     'libelf'
+    'spirv-llvm-translator'
     'zstd'
 
     'libclc'
-    'spirv-llvm-translator'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
@@ -206,10 +203,11 @@ package_opencl-rusticl-mesa() {
     'expat'
     'libdrm'
     'libelf'
+    'lm_sensors'
+    'spirv-llvm-translator'
     'zstd'
 
     'libclc'
-    'spirv-llvm-translator'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver')
