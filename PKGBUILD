@@ -17,7 +17,7 @@ pkgname=(
   'mesa'
 )
 pkgver=23.1.6
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
