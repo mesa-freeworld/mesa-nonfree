@@ -43,7 +43,7 @@ jobs:
       - name: install tools
         shell: bash
         run: |
-          pacman -Sy --noconfirm --needed git git-lfs github-cli
+          pacman -Sy --noconfirm --needed glibc git git-lfs github-cli
       - id: repo-add
         uses: manjaro-contrib/action-repo-add@main
         with:
