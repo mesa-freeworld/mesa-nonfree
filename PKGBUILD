@@ -41,7 +41,7 @@ makedepends=(
   'libxrandr'
   'libxshmfence'
   'libxxf86vm'
-  'llvm'
+  'llvm>=16.0.0'
   'lm_sensors'
   'rust'
   'spirv-llvm-translator'
