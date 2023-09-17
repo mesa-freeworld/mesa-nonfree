@@ -249,7 +249,7 @@ package_vulkan-radeon() {
     'libelf'
     'libx11'
     'libxshmfence'
-    'llvm-libs'
+    'llvm-libs>=16.0.0'
     'systemd'
     'wayland'
     'zstd'
@@ -271,7 +271,7 @@ package_vulkan-swrast() {
     'libunwind'
     'libx11'
     'libxshmfence'
-    'llvm-libs'
+    'llvm-libs>=16.0.0'
     'systemd'
     'wayland'
     'zstd'
@@ -314,7 +314,7 @@ package_libva-mesa-driver() {
     'libelf'
     'libx11'
     'libxshmfence'
-    'llvm-libs'
+    'llvm-libs>=16.0.0'
     'zstd'
   )
   provides=('libva-driver')
@@ -332,7 +332,7 @@ package_mesa-vdpau() {
     'libelf'
     'libx11'
     'libxshmfence'
-    'llvm-libs'
+    'llvm-libs>=16.0.0'
     'zstd'
   )
   provides=('vdpau-driver')
@@ -351,7 +351,7 @@ package_mesa() {
     'libxdamage'
     'libxshmfence'
     'libxxf86vm'
-    'llvm-libs'
+    'llvm-libs>=16.0.0'
     'lm_sensors'
     'vulkan-icd-loader'
     'wayland'
