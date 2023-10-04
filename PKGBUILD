@@ -99,10 +99,6 @@ prepare() {
   # its GPU cache; otherwise it can cause pages to render incorrectly.
   # https://bugs.launchpad.net/ubuntu/+source/chromium-browser/+bug/2020604
   echo "$pkgver-manjaro$epoch.$pkgrel" >VERSION
-
-  # https://bugs.archlinux.org/task/79821
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/9908
-  sed -i 's/not have_mtls_dialect/false/' meson.build
 }
 
 build() {
