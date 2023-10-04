@@ -20,7 +20,7 @@ pkgname=(
   'mesa-vdpau'
   'mesa'
 )
-pkgver=23.1.8
+pkgver=23.1.9
 pkgrel=1
 epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification"
@@ -42,7 +42,7 @@ makedepends=(
   'libxrandr'
   'libxshmfence'
   'libxxf86vm'
-  'llvm>=16.0.0'
+  'llvm'
   'lm_sensors'
   'rust'
   'spirv-llvm-translator'
@@ -79,10 +79,10 @@ source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
   LICENSE
 )
-sha256sums=('45434ff91a709844130a3174d9c0ef39c6b50725b2bb0c13e736f36134db14ad'
+sha256sums=('295ba27c28146ed09214e8ce79afa1659edf9d142decc3c91f804552d64f7510'
             'SKIP'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
-b2sums=('43825c936f0dca4bc7e954cf7f8afc9566fb26d23969a9f60279a279504464b4eee966f5db34602489fb659942d11629675a1ef44493020925047bbd8cd7f0d7'
+b2sums=('a4386398841476f6e69031043091cbbf0afff1ef9523e7d6216b1acc49fa8afbe5270802c78d951fee42dd6c8268bc515ed1236de4ce47a5d90e6bdd1ff16b92'
         'SKIP'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -99,6 +99,10 @@ prepare() {
   # its GPU cache; otherwise it can cause pages to render incorrectly.
   # https://bugs.launchpad.net/ubuntu/+source/chromium-browser/+bug/2020604
   echo "$pkgver-manjaro$epoch.$pkgrel" >VERSION
+
+  # https://bugs.archlinux.org/task/79821
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/9908
+  sed -i 's/not have_mtls_dialect/false/' meson.build
 }
 
 build() {
@@ -250,7 +254,7 @@ package_vulkan-radeon() {
     'libelf'
     'libx11'
     'libxshmfence'
-    'llvm-libs>=16.0.0'
+    'llvm-libs'
     'systemd'
     'wayland'
     'zstd'
@@ -272,7 +276,7 @@ package_vulkan-swrast() {
     'libunwind'
     'libx11'
     'libxshmfence'
-    'llvm-libs>=16.0.0'
+    'llvm-libs'
     'systemd'
     'wayland'
     'zstd'
@@ -315,7 +319,7 @@ package_libva-mesa-driver() {
     'libelf'
     'libx11'
     'libxshmfence'
-    'llvm-libs>=16.0.0'
+    'llvm-libs'
     'zstd'
   )
   provides=('libva-driver')
@@ -333,7 +337,7 @@ package_mesa-vdpau() {
     'libelf'
     'libx11'
     'libxshmfence'
-    'llvm-libs>=16.0.0'
+    'llvm-libs'
     'zstd'
   )
   provides=('vdpau-driver')
@@ -352,7 +356,7 @@ package_mesa() {
     'libxdamage'
     'libxshmfence'
     'libxxf86vm'
-    'llvm-libs>=16.0.0'
+    'llvm-libs'
     'lm_sensors'
     'vulkan-icd-loader'
     'wayland'
