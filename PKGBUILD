@@ -16,8 +16,8 @@ pkgname=(
   'mesa-vdpau'
   'mesa'
 )
-pkgver=23.2.1
-pkgrel=2
+pkgver=23.3.0
+pkgrel=1
 epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
@@ -73,16 +73,13 @@ makedepends=(
 )
 source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
-  0001-radeonsi-prefix-function-with-si_-to-prevent-name-co.patch
   LICENSE
 )
-sha256sums=('64de0616fc2d801f929ab1ac2a4f16b3e2783c4309a724c8a259b20df8bbc1cc'
+sha256sums=('50f729dd60ed6335b989095baad81ef5edf7cfdd4b4b48b9b955917cb07d69c5'
             'SKIP'
-            'fcd21477e5c6122dc74f72457364448b171f7843b7a671e1f9df9c61bd888898'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
-b2sums=('51e44c2e9b7dfe17cf4cb7252e169109d03a006caa8ec34036fb594c0c44e9278d0088170894c1a9debdea911f746470e1d256576e0635cae5c3e670ab49161b'
+b2sums=('1b87d15cbe1b4c761653b7042c46eac3036f08dfcf3a0a81aa7bf6c1c0c402b05f37ce8da9d88df72e1745d66a648c2b8c161b04bf558107f548f6d8167cc798'
         'SKIP'
-        'b5f2ee167103d53bc0d5ada123d9c3a1e394b5c0b992401da2d4cf69da30710f7d5b6b9264634e02a1e9856798780c1dc3faed01058274599290cb82c15dd193'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
@@ -93,10 +90,6 @@ validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l
 
 prepare() {
   cd mesa-$pkgver
-
-  # https://bugs.archlinux.org/task/79831
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/9889#note_2113953
-  patch -Np1 -i ../0001-radeonsi-prefix-function-with-si_-to-prevent-name-co.patch
 
   # Include package release in version string so Chromium invalidates
   # its GPU cache; otherwise it can cause pages to render incorrectly.
