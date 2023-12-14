@@ -1,0 +1,55 @@
+name: pkgbuild
+
+on:
+  repository_dispatch:
+    types:
+      - rebase
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  version:
+    name: gather information
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repo
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - id: version
+        uses: manjaro-contrib/action-pkgbuild-info@main
+    outputs:
+      runs-on: ${{ steps.version.outputs.runs-on }}
+      version: ${{ steps.version.outputs.version }}
+      branches: ${{ steps.version.outputs.branches }}
+  pkgbuild:
+    name: building version ${{ needs.version.outputs.version }} against ${{ matrix.branch }} on ${{ matrix.runs-on }}
+    needs: [version]
+    if: needs.version.outputs.branches != ''
+    continue-on-error: true
+    strategy:
+      matrix:
+        branch: ${{ fromJSON(needs.version.outputs.branches) }}
+        runs-on: ${{ fromJSON(needs.version.outputs.runs-on) }}
+    runs-on: ${{ matrix.runs-on }}
+    permissions:
+      contents: write
+      packages: write
+    container:
+      image: docker://manjarolinux/build:latest
+    steps:
+      - name: pkgbuild
+        uses: manjaro-contrib/action-makepkg@main
+        with:
+          branch: ${{ matrix.branch }}
+          release: ${{ matrix.branch }}-${{ needs.version.outputs.version }}
+          dispatch-target: ${{ vars.PACKAGES_REPO }}
+          dispatch-token: ${{ secrets.DISPATCH_TOKEN }}
+          gpg_secret_base64: ${{ secrets.gpg_secret_base64 }}
+          additional_gpg: ${{ vars.ADDITIONAL_GPG }}
+          additional_repo: ${{ vars.ADDITIONAL_REPO }}

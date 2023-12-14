@@ -1,0 +1,36 @@
+---
+layout: default
+---
+
+{% capture keyid %}{% include keyid.asc %}{% endcapture %} {% assign extensions
+= '.zst,.sig,.db,.files,.gz' %}
+<pre>
+### install ###
+
+# locally trust the ci key
+sudo pacman-key --recv-keys {{ keyid | strip_newlines }} && \
+  sudo pacman-key --lsign-key {{ keyid | strip_newlines }}
+
+## add the repo configuration:
+sudo sh -c "curl -s {{ page.url | prepend: site.baseurl | prepend: site.url | append: '$(pacman-mirrors -G)/' }} > /etc/pacman.d/{{ site.title }}.pre.repo.conf"
+
+## include the repo configuration:
+sudo sed -i '/^\[core\]/i \Include = /etc/pacman.d/{{ site.title }}.pre.repo.conf\n' /etc/pacman.conf
+
+### uninstall ###
+
+# remove the repo include from pacman.conf and reinstall the stock packages
+
+PKGS="$(pacman -Sl mesa-nonfree | grep 'installed' | awk '{print $2}')" && sudo sed -i '/mesa-nonfree/d' /etc/pacman.conf && sudo pacman -Sy $(echo ${PKGS//$'\n'/ })
+
+</pre>
+{% for file in site.static_files %}{% if extensions contains file.extname %}
+<div class="link">
+  <a
+    href="{{ page.url | prepend: site.baseurl | prepend: site.url }}{{ file.path | escape }}"
+    aria-label="{{ file.path | escape }}"
+  >
+    {{ file.path | escape }}
+  </a>
+</div>
+{% endif %}{% endfor %}

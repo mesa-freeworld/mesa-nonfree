@@ -7,6 +7,7 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
+codecs="vc1dec,h264dec,h264enc,h265dec,h265enc"
 pkgbase=mesa
 pkgname=(
   'vulkan-mesa-layers'
@@ -20,8 +21,9 @@ pkgname=(
   'mesa-vdpau'
   'mesa'
 )
-pkgver=23.1.7
+pkgver=23.1.9
 pkgrel=1
+epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -78,10 +80,10 @@ source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
   LICENSE
 )
-sha256sums=('409641eadf0ed1c7794797a6f5a0b0195b5580b282166e5ec5629c6bcda6acd3'
+sha256sums=('295ba27c28146ed09214e8ce79afa1659edf9d142decc3c91f804552d64f7510'
             'SKIP'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
-b2sums=('ec688b2a5db396423e53b8798dfbff0c2034e6f0f80e3b73a27b92b0441cfa8578bb633577b5199f1a4a107bdf80af23bc4663b424324f2f71b0abcaa6c4b103'
+b2sums=('a4386398841476f6e69031043091cbbf0afff1ef9523e7d6216b1acc49fa8afbe5270802c78d951fee42dd6c8268bc515ed1236de4ce47a5d90e6bdd1ff16b92'
         'SKIP'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -92,12 +94,12 @@ validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l
               '57551DE15B968F6341C248F68D8E31AFC32428A6') # Eric Engestrom <eric@engestrom.ch>
 
 prepare() {
-  cd mesa-$pkgver
+  cd mesa-$pkgver || exit
   
   # Include package release in version string so Chromium invalidates
   # its GPU cache; otherwise it can cause pages to render incorrectly.
   # https://bugs.launchpad.net/ubuntu/+source/chromium-browser/+bug/2020604
-  echo "$pkgver-$pkgrel" >VERSION
+  echo "$pkgver-manjaro$epoch.$pkgrel" >VERSION
 }
 
 build() {
@@ -129,6 +131,7 @@ build() {
     -D platforms=x11,wayland
     -D rust_std=2021
     -D shared-glapi=enabled
+    -D video-codecs=$codecs \
     -D valgrind=enabled
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental
     -D vulkan-layers=device-select,intel-nullhw,overlay
