@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        branch: [stable, testing, unstable]
+        branch: [unstable]
     permissions:
       contents: write
     steps:
