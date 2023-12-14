@@ -18,7 +18,7 @@ pkgname=(
 )
 pkgver=23.3.1
 pkgrel=1
-epoch=1
+epoch=10
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -76,17 +76,17 @@ source=(
   LICENSE
 )
 sha256sums=('6e48126d70fdb3f20ffeb246ca0c2e41ffdc835f0663a03d4526b8bf5db41de6'
-            'SKIP'
-            '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
+  'SKIP'
+  '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
 b2sums=('73696281868e5eba6493cc34786a6c30eaf256bed2495444be9a1a5ebf1a0d4b8f00bcc3fb91ce9de3ac8ff23663e41cab17b8fe42b1048366c8e9b95aefa905'
-        'SKIP'
-        '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
-validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
-              '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
-              'E3E8F480C52ADD73B278EE78E1ECBE07D7D70895'  # Juan Antonio Suárez Romero (Igalia, S.L.) <jasuarez@igalia.com>
-              'A5CC9FEC93F2F837CB044912336909B6B25FADFA'  # Juan A. Suarez Romero <jasuarez@igalia.com>
-              '71C4B75620BC75708B4BDB254C95FAAB3EB073EC'  # Dylan Baker <dylan@pnwbakers.com>
-              '57551DE15B968F6341C248F68D8E31AFC32428A6') # Eric Engestrom <eric@engestrom.ch>
+  'SKIP'
+  '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
+validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D' # Emil Velikov <emil.l.velikov@gmail.com>
+  '946D09B5E4C9845E63075FF1D961C596A7203456'             # Andres Gomez <tanty@igalia.com>
+  'E3E8F480C52ADD73B278EE78E1ECBE07D7D70895'             # Juan Antonio Suárez Romero (Igalia, S.L.) <jasuarez@igalia.com>
+  'A5CC9FEC93F2F837CB044912336909B6B25FADFA'             # Juan A. Suarez Romero <jasuarez@igalia.com>
+  '71C4B75620BC75708B4BDB254C95FAAB3EB073EC'             # Dylan Baker <dylan@pnwbakers.com>
+  '57551DE15B968F6341C248F68D8E31AFC32428A6')            # Eric Engestrom <eric@engestrom.ch>
 
 prepare() {
   cd mesa-$pkgver
