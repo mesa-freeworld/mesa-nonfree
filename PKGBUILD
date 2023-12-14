@@ -23,7 +23,7 @@ pkgname=(
 )
 pkgver=23.1.9
 pkgrel=1
-epoch=1
+epoch=10
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -81,21 +81,21 @@ source=(
   LICENSE
 )
 sha256sums=('295ba27c28146ed09214e8ce79afa1659edf9d142decc3c91f804552d64f7510'
-            'SKIP'
-            '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
+  'SKIP'
+  '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
 b2sums=('a4386398841476f6e69031043091cbbf0afff1ef9523e7d6216b1acc49fa8afbe5270802c78d951fee42dd6c8268bc515ed1236de4ce47a5d90e6bdd1ff16b92'
-        'SKIP'
-        '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
-validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
-              '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
-              'E3E8F480C52ADD73B278EE78E1ECBE07D7D70895'  # Juan Antonio Suárez Romero (Igalia, S.L.) <jasuarez@igalia.com>
-              'A5CC9FEC93F2F837CB044912336909B6B25FADFA'  # Juan A. Suarez Romero <jasuarez@igalia.com>
-              '71C4B75620BC75708B4BDB254C95FAAB3EB073EC'  # Dylan Baker <dylan@pnwbakers.com>
-              '57551DE15B968F6341C248F68D8E31AFC32428A6') # Eric Engestrom <eric@engestrom.ch>
+  'SKIP'
+  '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
+validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D' # Emil Velikov <emil.l.velikov@gmail.com>
+  '946D09B5E4C9845E63075FF1D961C596A7203456'             # Andres Gomez <tanty@igalia.com>
+  'E3E8F480C52ADD73B278EE78E1ECBE07D7D70895'             # Juan Antonio Suárez Romero (Igalia, S.L.) <jasuarez@igalia.com>
+  'A5CC9FEC93F2F837CB044912336909B6B25FADFA'             # Juan A. Suarez Romero <jasuarez@igalia.com>
+  '71C4B75620BC75708B4BDB254C95FAAB3EB073EC'             # Dylan Baker <dylan@pnwbakers.com>
+  '57551DE15B968F6341C248F68D8E31AFC32428A6')            # Eric Engestrom <eric@engestrom.ch>
 
 prepare() {
   cd mesa-$pkgver || exit
-  
+
   # Include package release in version string so Chromium invalidates
   # its GPU cache; otherwise it can cause pages to render incorrectly.
   # https://bugs.launchpad.net/ubuntu/+source/chromium-browser/+bug/2020604
@@ -131,7 +131,7 @@ build() {
     -D platforms=x11,wayland
     -D rust_std=2021
     -D shared-glapi=enabled
-    -D video-codecs=$codecs \
+    -D video-codecs=$codecs
     -D valgrind=enabled
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental
     -D vulkan-layers=device-select,intel-nullhw,overlay
@@ -399,4 +399,3 @@ package_mesa() {
 
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
-
