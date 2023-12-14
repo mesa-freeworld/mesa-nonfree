@@ -10,7 +10,7 @@ on:
       - master
       - main
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
@@ -30,11 +30,11 @@ jobs:
   pkgbuild:
     name: building version ${{ needs.version.outputs.version }} against ${{ matrix.branch }} on ${{ matrix.runs-on }}
     needs: [version]
-    if: needs.version.outputs.branches != ''
+    if: needs.version.outputs.branches != '' && contains(needs.version.outputs.branches, 'unstable')
     continue-on-error: true
     strategy:
       matrix:
-        branch: ${{ fromJSON(needs.version.outputs.branches) }}
+        branch: [unstable]
         runs-on: ${{ fromJSON(needs.version.outputs.runs-on) }}
     runs-on: ${{ matrix.runs-on }}
     permissions:
