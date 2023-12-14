@@ -1,0 +1,27 @@
+name: submit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency: 
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  resubmit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: [stable, testing, unstable]
+    permissions:
+      contents: write
+    steps:
+      - name: submit
+        uses: manjaro-contrib/action-submit@main
+        with:
+          dispatch-target: ${{ vars.PACKAGES_REPO }}
+          dispatch-token: ${{ secrets.DISPATCH_TOKEN }}
+          branch: ${{ matrix.branch }}
