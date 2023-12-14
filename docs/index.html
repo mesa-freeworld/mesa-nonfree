@@ -11,6 +11,12 @@ layout: default
 sudo pacman-key --recv-keys {{ keyid | strip_newlines }} && \
   sudo pacman-key --lsign-key {{ keyid | strip_newlines }}
 
+## switch to Manjaro unstable branch
+sudo pacman-mirrors -aS unstable
+
+## Run a full system sync
+sudo pacman -Syu
+
 ## add the repo configuration:
 sudo sh -c "curl -s {{ page.url | prepend: site.baseurl | prepend: site.url | append: '$(pacman-mirrors -G)/' }} > /etc/pacman.d/{{ site.title }}.pre.repo.conf"
 
