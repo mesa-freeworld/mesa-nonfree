@@ -2,38 +2,47 @@
 layout: default
 ---
 
+<h2>Install</h2>
+<h3>Remove deprecated signatures</h3>
+<pre>
+    sudo rm -f /var/lib/pacman/sync/mesa-nonfree.*.sig
+</pre>
+
+<h3>Locally trust CI key</h3>
+<pre>
+    sudo pacman-key --recv-keys B728DB23B92CB01B && \
+        sudo pacman-key --lsign-key B728DB23B92CB01B
+</pre>
+
+<h3>Switch to Manjaro unstable branch and</h3>
+<pre>
+    sudo pacman-mirrors -aS unstable && \
+        sudo pacman -Syu
+</pre>
+
+<h3>Download repo configuration</h3>
+<pre>
+    sudo sh -c "curl -s https://nonfree.eu/unstable/ > /etc/pacman.d/mesa-nonfree.pre.repo.conf"
+</pre>
+
+<h3>Inject repo configuration in pacman.conf</h3>
+<p>The config must precede the core repo to work</p>
+<pre>
+    sudo sed -i '/^\[core\]/i \Include = /etc/pacman.d/mesa-nonfree.pre.repo.conf\n' /etc/pacman.conf
+</pre>
+
+<h2>Remove</h2>
+<p>Remove repo and return to stock Manjaro</p>
+<pre>
+    PKGS="$(pacman -Sl mesa-nonfree | grep 'installed' | awk '{print $2}')" && \
+        sudo sed -i '/mesa-nonfree/d' /etc/pacman.conf && \
+            sudo pacman -Sy $(echo ${PKGS//$'\n'/ })
+</pre>
+
 {% capture keyid %}{% include keyid.asc %}{% endcapture %} {% assign extensions
 = '.zst,.sig,.db,.files,.gz' %}
-<pre>
-### install ###
-
-## make sure deprecated signatures are removed
-sudo rm -f /var/lib/pacman/sync/mesa-nonfree.*.sig
-
-## locally trust the ci key
-sudo pacman-key --recv-keys {{ keyid | strip_newlines }} && \
-  sudo pacman-key --lsign-key {{ keyid | strip_newlines }}
-
-## switch to Manjaro unstable branch
-sudo pacman-mirrors -aS unstable
-
-## Run a full system sync
-sudo pacman -Syu
-
-## add the repo configuration:
-sudo sh -c "curl -s {{ page.url | prepend: site.baseurl | prepend: site.url | append: '$(pacman-mirrors -G)/' }} > /etc/pacman.d/{{ site.title }}.pre.repo.conf"
-
-## include the repo configuration:
-sudo sed -i '/^\[core\]/i \Include = /etc/pacman.d/{{ site.title }}.pre.repo.conf\n' /etc/pacman.conf
-
-### uninstall ###
-
-## remove the repo include from pacman.conf and reinstall the stock packages
-
-PKGS="$(pacman -Sl mesa-nonfree | grep 'installed' | awk '{print $2}')" && sudo sed -i '/mesa-nonfree/d' /etc/pacman.conf && sudo pacman -Sy $(echo ${PKGS//$'\n'/ })
-
-</pre>
 {% for file in site.static_files %}{% if extensions contains file.extname %}
+
 <div class="link">
   <a
     href="{{ page.url | prepend: site.baseurl | prepend: site.url }}{{ file.path | escape }}"
