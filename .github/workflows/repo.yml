@@ -1,25 +1,23 @@
-name: 'repo'
+name: "repo"
 
 on:
   repository_dispatch:
-    types: 
+    types:
       - package_update
   workflow_dispatch:
     inputs:
       repository:
-        description: 'where to look for a release'
+        description: "where to look for a release"
         required: true
-      release: 
-        description: 'release to download'
+      release:
+        description: "release to download"
         required: true
       branch:
-        description: 'manjaro lifecycle branch'
+        description: "manjaro lifecycle branch"
         required: true
         type: choice
         options:
-        - stable
-        - testing
-        - unstable
+          - unstable
 
 env:
   repository: ${{ github.event.client_payload.repository || inputs.repository }}
