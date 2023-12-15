@@ -36,7 +36,7 @@ layout: default
 <pre>
     PKGS="$(pacman -Sl mesa-nonfree | grep 'installed' | awk '{print $2}')" && \
         sudo sed -i '/mesa-nonfree/d' /etc/pacman.conf && \
-        sudo pacman -Sy $(echo ${PKGS//$'\n'/ })
+            sudo pacman -Sy $(echo ${PKGS//$'\n'/ })
 </pre>
 
 {% capture keyid %}{% include keyid.asc %}{% endcapture %} {% assign extensions
