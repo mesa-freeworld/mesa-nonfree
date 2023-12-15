@@ -26,7 +26,7 @@ layout: default
 </pre>
 
 <h3>Inject repo configuration in pacman.conf</h3>
-<p>The config must presede the core repo to work</p>
+<p>The config must precede the core repo to work</p>
 <pre>
     sudo sed -i '/^\[core\]/i \Include = /etc/pacman.d/mesa-nonfree.pre.repo.conf\n' /etc/pacman.conf
 </pre>
