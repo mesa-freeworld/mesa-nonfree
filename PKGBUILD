@@ -8,7 +8,6 @@ pkgname=(
   'vulkan-mesa-layers'
   'opencl-clover-mesa'
   'opencl-rusticl-mesa'
-  'vulkan-intel'
   'vulkan-radeon'
   'vulkan-swrast'
   'vulkan-virtio'
@@ -17,7 +16,7 @@ pkgname=(
   'mesa'
 )
 pkgver=23.3.4
-pkgrel=3
+pkgrel=4
 epoch=10
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
@@ -29,7 +28,6 @@ makedepends=(
   'libdrm'
   'libelf'
   'libglvnd'
-  'libunwind'
   'libva'
   'libvdpau'
   'libx11'
@@ -45,7 +43,6 @@ makedepends=(
   'spirv-tools'
   'systemd'
   'vulkan-icd-loader'
-  'wayland'
   'xcb-util-keysyms'
   'zstd'
 
@@ -59,7 +56,6 @@ makedepends=(
   'python-mako'
   'python-ply'
   'rust-bindgen'
-  'wayland-protocols'
   'xorgproto'
 
   # valgrind deps
@@ -162,7 +158,6 @@ package_vulkan-mesa-layers() {
   depends=(
     'libdrm'
     'libxcb'
-    'wayland'
 
     'python'
   )
@@ -232,7 +227,6 @@ package_vulkan-intel() {
     'libx11'
     'libxshmfence'
     'systemd'
-    'wayland'
     'xcb-util-keysyms'
     'zstd'
   )
@@ -254,7 +248,6 @@ package_vulkan-radeon() {
     'libxshmfence'
     'llvm-libs'
     'systemd'
-    'wayland'
     'xcb-util-keysyms'
     'zstd'
   )
@@ -277,7 +270,6 @@ package_vulkan-swrast() {
     'libxshmfence'
     'llvm-libs'
     'systemd'
-    'wayland'
     'xcb-util-keysyms'
     'zstd'
   )
@@ -299,7 +291,6 @@ package_vulkan-virtio() {
     'libx11'
     'libxshmfence'
     'systemd'
-    'wayland'
     'xcb-util-keysyms'
     'zstd'
   )
@@ -360,7 +351,6 @@ package_mesa() {
     'llvm-libs'
     'lm_sensors'
     'vulkan-icd-loader'
-    'wayland'
     'zstd'
 
     'libomxil-bellagio'
