@@ -17,7 +17,7 @@ pkgname=(
   'mesa'
 )
 pkgver=23.3.4
-pkgrel=2
+pkgrel=3
 epoch=10
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
@@ -127,7 +127,7 @@ build() {
     -D rust_std=2021
     -D shared-glapi=enabled
     -D valgrind=enabled
-    -D video-codecs=all
+    -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio
     -D vulkan-layers=device-select,intel-nullhw,overlay
   )
