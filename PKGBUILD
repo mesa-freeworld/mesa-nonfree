@@ -17,7 +17,7 @@ pkgname=(
   'mesa'
 )
 pkgver=23.3.4
-pkgrel=1
+pkgrel=2
 epoch=10
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
@@ -103,7 +103,7 @@ build() {
     -D b_ndebug=true
     -D dri3=enabled
     -D egl=enabled
-    -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,crocus,zink,d3d12
+    -D gallium-drivers=radeonsi,virgl,svga,swrast
     -D gallium-extra-hud=true
     -D gallium-nine=true
     -D gallium-omx=bellagio
@@ -123,12 +123,13 @@ build() {
     -D lmsensors=enabled
     -D microsoft-clc=disabled
     -D osmesa=true
-    -D platforms=x11,wayland
+    -D platforms=x11
     -D rust_std=2021
     -D shared-glapi=enabled
     -D valgrind=enabled
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio
     -D vulkan-layers=device-select,intel-nullhw,overlay
+    -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
   )
 
   # Build only minimal debug info to reduce size
