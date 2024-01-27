@@ -1,0 +1,24 @@
+name: rebase
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/30 * * * *"
+
+concurrency:
+  group: rebase
+  cancel-in-progress: true
+
+jobs:
+  rebase:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: rebase
+        uses: manjaro-contrib/action-rebase@main
+        with:
+          upstream: https://gitlab.archlinux.org/archlinux/packaging/packages/mesa.git
+          dispatch-target: ${{ vars.PACKAGES_REPO }}
+          dispatch-token: ${{ secrets.DISPATCH_TOKEN }}
