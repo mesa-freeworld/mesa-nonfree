@@ -56,9 +56,6 @@ makedepends=(
 	'rust-bindgen'
 	'xorgproto'
 
-	# valgrind deps
-	'valgrind'
-
 	# d3d12 deps
 	'directx-headers'
 
@@ -224,7 +221,6 @@ package_vulkan-swrast() {
 	pkgdesc="Vulkan software rasteriser driver"
 	depends=(
 		'libdrm'
-		'libunwind'
 		'libx11'
 		'libxshmfence'
 		'llvm-libs'
@@ -285,7 +281,6 @@ package_mesa() {
 		'libdrm'
 		'libelf'
 		'libglvnd'
-		'libunwind'
 		'libxdamage'
 		'libxshmfence'
 		'libxxf86vm'
