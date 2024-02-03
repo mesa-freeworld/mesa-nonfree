@@ -56,9 +56,6 @@ makedepends=(
 	'rust-bindgen'
 	'xorgproto'
 
-	# d3d12 deps
-	'directx-headers'
-
 	# gallium-omx deps
 	'libomxil-bellagio'
 )
