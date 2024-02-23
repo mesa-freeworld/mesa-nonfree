@@ -5,12 +5,11 @@
 
 pkgbase=mesa
 pkgname=(
+	'vulkan-mesa-layers'
 	'opencl-clover-mesa'
 	'opencl-rusticl-mesa'
 	'vulkan-radeon'
-	'vulkan-swrast'
 	'libva-mesa-driver'
-	'mesa-vdpau'
 	'mesa'
 )
 pkgver=24.0.1
@@ -27,7 +26,6 @@ makedepends=(
 	'libelf'
 	'libglvnd'
 	'libva'
-	'libvdpau'
 	'libx11'
 	'libxdamage'
 	'libxml2'
@@ -92,15 +90,15 @@ build() {
 		-D b_ndebug=true
 		-D dri3=enabled
 		-D egl=enabled
-		-D gallium-drivers=radeonsi,virgl,svga,swrast,zink
+		-D gallium-drivers=radeonsi,swrast,zink
 		-D gallium-extra-hud=true
 		-D gallium-nine=true
 		-D gallium-omx=bellagio
 		-D gallium-opencl=icd
 		-D gallium-rusticl=true
 		-D gallium-va=enabled
-		-D gallium-vdpau=enabled
-		-D gallium-xa=enabled
+		-D gallium-vdpau=disabled
+		-D gallium-xa=disabled
 		-D gbm=enabled
 		-D gles1=disabled
 		-D gles2=enabled
@@ -115,9 +113,11 @@ build() {
 		-D platforms=x11
 		-D rust_std=2021
 		-D shared-glapi=enabled
+		-D opencl-spirv=true
 		-D valgrind=disabled
 		-D video-codecs=all
-		-D vulkan-drivers=amd,swrast
+		-D vulkan-drivers=amd
+		-D vulkan-layers=device-select,overlay
 	)
 
 	# Build only minimal debug info to reduce size
@@ -144,6 +144,26 @@ _install() {
 }
 
 _libdir=usr/lib
+
+package_vulkan-mesa-layers() {
+  pkgdesc="Mesa's Vulkan layers"
+  depends=(
+    'libdrm'
+    'libxcb'
+    'wayland'
+
+    'python'
+  )
+  conflicts=('vulkan-mesa-layer')
+  replaces=('vulkan-mesa-layer')
+
+  _install fakeinstall/usr/share/vulkan/explicit_layer.d
+  _install fakeinstall/usr/share/vulkan/implicit_layer.d
+  _install fakeinstall/$_libdir/libVkLayer_*.so
+  _install fakeinstall/usr/bin/mesa-overlay-control.py
+
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
+}
 
 package_opencl-clover-mesa() {
 	pkgdesc="OpenCL support with clover for mesa drivers"
@@ -215,28 +235,6 @@ package_vulkan-radeon() {
 	install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
 
-package_vulkan-swrast() {
-	pkgdesc="Vulkan software rasteriser driver"
-	depends=(
-		'libdrm'
-		'libx11'
-		'libxshmfence'
-		'llvm-libs'
-		'systemd'
-		'xcb-util-keysyms'
-		'zstd'
-	)
-	optdepends=('vulkan-mesa-layers: additional vulkan layers')
-	conflicts=('vulkan-mesa')
-	replaces=('vulkan-mesa')
-	provides=('vulkan-driver')
-
-	_install fakeinstall/usr/share/vulkan/icd.d/lvp_icd*.json
-	_install fakeinstall/$_libdir/libvulkan_lvp.so
-
-	install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
-}
-
 package_libva-mesa-driver() {
 	pkgdesc="VA-API drivers"
 	depends=(
@@ -255,23 +253,6 @@ package_libva-mesa-driver() {
 	install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
 
-package_mesa-vdpau() {
-	pkgdesc="VDPAU drivers"
-	depends=(
-		'expat'
-		'libdrm'
-		'libelf'
-		'libx11'
-		'libxshmfence'
-		'llvm-libs'
-		'zstd'
-	)
-	provides=('vdpau-driver')
-
-	_install fakeinstall/$_libdir/vdpau
-
-	install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
-}
 
 package_mesa() {
 	depends=(
