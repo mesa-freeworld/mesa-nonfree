@@ -300,7 +300,6 @@ package_mesa() {
 	_install fakeinstall/$_libdir/d3d
 	_install fakeinstall/$_libdir/lib{gbm,glapi}.so*
 	_install fakeinstall/$_libdir/libOSMesa.so*
-	_install fakeinstall/$_libdir/libxatracker.so*
 
 	_install fakeinstall/usr/include
 	_install fakeinstall/$_libdir/pkgconfig
