@@ -17,7 +17,7 @@ pkgname=(
   'mesa'
 )
 pkgver=24.0.3
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification"
 url="https://www.mesa3d.org/"
@@ -124,6 +124,7 @@ build() {
     -D glvnd=true
     -D glx=dri
     -D intel-clc=enabled
+    -D intel-xe-kmd=enabled
     -D libunwind=enabled
     -D llvm=enabled
     -D lmsensors=enabled
