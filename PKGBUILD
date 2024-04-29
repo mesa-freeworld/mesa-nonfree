@@ -3,7 +3,6 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
-epoch=10
 pkgbase=mesa
 pkgname=(
   'vulkan-mesa-layers'
