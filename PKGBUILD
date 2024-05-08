@@ -18,8 +18,8 @@ pkgname=(
   'mesa-vdpau'
   'mesa'
 )
-pkgver=24.0.6
-pkgrel=2
+pkgver=24.0.7
+pkgrel=1
 epoch=1
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
@@ -103,13 +103,13 @@ for _crate in "${!_crates[@]}"; do
   source+=($_crate-${_crates[$_crate]}.tar.gz::https://crates.io/api/v1/crates/$_crate/${_crates[$_crate]}/download)
 done
 
-sha256sums=('8b7a92dbe6468c18f2383700135b5fe9de836cdf0cc8fd7dbae3c7110237d604'
+sha256sums=('7454425f1ed4a6f1b5b107e1672b30c88b22ea0efea000ae2c7d96db93f6c26a'
             'SKIP'
             '39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b'
             '3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b'
             '5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae'
             '23e78b90f2fcf45d3e842032ce32e3f2d1545ba6636271dcbf24fa306d87be7a')
-b2sums=('531482c1a01ec4c0bd6b2f0857640c14fcc2ba70e85a14e4edf0f44ba466c12e39ad067690e6a571a0744ae06080943b1328a29263225cb7570f119464e17fbe'
+b2sums=('d9438e533b471445b2403e01e1fd593d83c0013b0991585f718122f1cadc6ac6bb1fb913f0fb257354ae21ddd9fe1f970ad9ac46f05d756c223ed56a11b9c9ce'
         'SKIP'
         'fff0dec06b21e391783cc136790238acb783780eaedcf14875a350e7ceb46fdc100c8b9e3f09fb7f4c2196c25d4c6b61e574c0dad762d94533b628faab68cf5c'
         '4cede03c08758ccd6bf53a0d0057d7542dfdd0c93d342e89f3b90460be85518a9fd24958d8b1da2b5a09b5ddbee8a4263982194158e171c2bba3e394d88d6dac'
