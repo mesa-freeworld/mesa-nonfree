@@ -31,7 +31,6 @@ jobs:
     name: building version ${{ needs.version.outputs.version }} against ${{ matrix.branch }} on ${{ matrix.runs-on }}
     needs: [version]
     if: needs.version.outputs.branches != '' && contains(needs.version.outputs.branches, 'unstable')
-    continue-on-error: true
     strategy:
       matrix:
         branch: [unstable]
