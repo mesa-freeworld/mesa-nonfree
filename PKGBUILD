@@ -19,7 +19,7 @@ pkgname=(
   'mesa'
 )
 pkgver=24.0.7
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
@@ -163,16 +163,22 @@ build() {
   CFLAGS+=' -g1'
   CXXFLAGS+=' -g1'
 
+  # GCC 14 causes segfault in LLVM under si_llvm_optimize_module
+  export CC=clang CXX=clang++
+
+  # LTO needs more open files
+  ulimit -n 4096
+
   # Inject subproject packages
   export MESON_PACKAGE_CACHE_DIR="$srcdir"
 
   arch-meson mesa-$pkgver build "${meson_options[@]}"
-  meson configure build # Print config
+  meson configure build --no-pager # Print config
   meson compile -C build
 
   # fake installation to be seperated into packages
   # outside of fakeroot but mesa doesn't need to chown/mod
-  DESTDIR="${srcdir}/fakeinstall" meson install -C build
+  meson install -C build --destdir "$srcdir/fakeinstall"
 }
 
 _install() {
