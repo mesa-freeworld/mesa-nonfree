@@ -18,7 +18,7 @@ pkgname=(
   'mesa'
 )
 pkgver=24.0.7
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
@@ -78,6 +78,10 @@ makedepends=(
   # gallium-omx deps
   'libomxil-bellagio'
 )
+options=(
+  # GCC 14 LTO causes segfault in LLVM under si_llvm_optimize_module
+  !lto
+)
 source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
 )
@@ -128,30 +132,20 @@ build() {
   local meson_options=(
     -D android-libbacktrace=disabled
     -D b_ndebug=true
-    -D dri3=enabled
-    -D egl=enabled
     -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,crocus,zink,d3d12
     -D gallium-extra-hud=true
     -D gallium-nine=true
     -D gallium-omx=bellagio
     -D gallium-opencl=icd
     -D gallium-rusticl=true
-    -D gallium-va=enabled
-    -D gallium-vdpau=enabled
-    -D gallium-xa=enabled
-    -D gbm=enabled
     -D gles1=disabled
-    -D gles2=enabled
     -D glvnd=true
     -D glx=dri
     -D intel-clc=enabled
     -D libunwind=disabled
-    -D llvm=enabled
-    -D lmsensors=enabled
     -D microsoft-clc=disabled
     -D osmesa=true
     -D platforms=x11,wayland
-    -D shared-glapi=enabled
     -D valgrind=enabled
     -D video-codecs=all
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,nouveau-experimental
@@ -161,12 +155,6 @@ build() {
   # Build only minimal debug info to reduce size
   CFLAGS+=' -g1'
   CXXFLAGS+=' -g1'
-
-  # GCC 14 causes segfault in LLVM under si_llvm_optimize_module
-  export CC=clang CXX=clang++
-
-  # LTO needs more open files
-  ulimit -n 4096
 
   # Inject subproject packages
   export MESON_PACKAGE_CACHE_DIR="$srcdir"
