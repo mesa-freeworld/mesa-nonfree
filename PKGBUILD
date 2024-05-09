@@ -19,7 +19,7 @@ pkgname=(
   'mesa'
 )
 pkgver=24.0.7
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
@@ -78,6 +78,10 @@ makedepends=(
 
   # gallium-omx deps
   'libomxil-bellagio'
+)
+options=(
+  # GCC 14 LTO causes segfault in LLVM under si_llvm_optimize_module
+  !lto
 )
 source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
@@ -152,12 +156,6 @@ build() {
   # Build only minimal debug info to reduce size
   CFLAGS+=' -g1'
   CXXFLAGS+=' -g1'
-
-  # GCC 14 causes segfault in LLVM under si_llvm_optimize_module
-  export CC=clang CXX=clang++
-
-  # LTO needs more open files
-  ulimit -n 4096
 
   # Inject subproject packages
   export MESON_PACKAGE_CACHE_DIR="$srcdir"
