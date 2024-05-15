@@ -19,7 +19,7 @@ pkgname=(
 )
 pkgver=24.0.7
 pkgrel=3
-epoch=1
+epoch=10
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
