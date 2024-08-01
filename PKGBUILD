@@ -3,7 +3,6 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
-
 pkgbase=mesa
 pkgname=(
   mesa
@@ -20,7 +19,7 @@ pkgname=(
 )
 pkgver=24.1.5
 pkgrel=1
-epoch=1
+epoch=10
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
 arch=(x86_64)
