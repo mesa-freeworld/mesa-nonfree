@@ -1,4 +1,12 @@
-> this is now obsolete. Manjaro is back to the arch version of the mesa packages.
+> This is repository is now obsolete. Manjaro is back to the arch version of the mesa packages.
+
+## How to return to the stock repos
+
+```sh
+PKGS="$(pacman -Sl mesa-nonfree | grep 'installed' | awk '{print $2}')"
+sudo sed -i '/mesa-nonfree/d' /etc/pacman.conf
+sudo pacman -Sy $(echo ${PKGS//$'\n'/ })
+```
 
 # mesa-nonfree
 
