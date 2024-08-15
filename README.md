@@ -1,3 +1,5 @@
+> this is now obsolete. Manjaro is back to the arch version of the mesa packages.
+
 # mesa-nonfree
 
 ![release](https://img.shields.io/github/v/release/mesa-freeworld/mesa-nonfree)
